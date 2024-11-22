@@ -1,23 +1,21 @@
 const {model, Schema} = require('mongoose');
 
-const agenda_guiaSchema = new Schema({ //creamos esquema del documento Mongo
+const agenda_guiaSchema = new Schema({ 
     id_tour: {
-        type: String, //tipo de dato
-        unique: true, //unico
-        required: [true, 'The id_tour is required'], //requerido
+        type: Number, 
+        required: [true, 'The id_tour is required'], 
     },
     id_guia: {
-        type: String, //tipo de dato
-        unique: true, //unico
-        required: [true, 'The id_guia is required'], //requerido
+        type: Number,
+        required: [true, 'The id_guia is required'], 
     },
     fecha_inicio: {
-        type: Date, //tipo de dato
-        required: [true, 'The fecha_inicio is required'], //requerido
+        type: Date, 
+        required: [true, 'The fecha_inicio is required'], 
     },
     fecha_fin: {
-        type: Date, //tipo de dato
-        required: [true, 'The fecha_fin is required'], //requerido
+        type: Date, 
+        required: [true, 'The fecha_fin is required'], 
     }
 });
 

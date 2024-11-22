@@ -1,53 +1,64 @@
+
 const Agenda_guia = require('../models/agenda_guia');
 
 const getAgenda_guia = async (req, res) => {
+  try {
     const agenda_guia = await Agenda_guia.find();
+    res.json(agenda_guia);
+  } catch (error) {
+    res.status(500).json({ msg: 'Error fetching agendas' });
+  }
+};
 
-    res.json(agenda_guia)
-}
+const getAgenda_guiaById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const agenda_guia = await Agenda_guia.findById(id);
+    res.json(agenda_guia);
+  } catch (error) {
+    res.status(500).json({ msg: 'Error fetching agendas' });
+  }
+};
 
 const postAgenda_guia = async (req, res) => {
-    let msg = 'Agenda inserted';
-    const body = req.body
-    try{
-        const agenda_guia = new Agenda_guia(body);
-        agenda_guia.save()
-    }catch(error){
-        msg = error
-    }
-
-    res.json({msg:msg})
-}
+  try {
+    const { body } = req; // extract body from request
+    const agenda_guia = new Agenda_guia(body);
+    await agenda_guia.save();
+    res.json({ msg: 'Agenda inserted' });
+  } catch (error) {
+    res.status(500).json({ msg: 'Error creating agenda' });
+  }
+};
 
 const putAgenda_guia = async (req, res) => {
-    let msg = 'Agenda updated';
-    
-    const {id_tour, id_guia, fecha_inicio, fecha_fin} = req.body
-    
-    try{
-        await Agenda_guia.findOneAndUpdate({id_tour: id_tour, id_guia: id_guia}, {fecha_inicio:fecha_inicio, fecha_fin:fecha_fin});
-    }catch(error){
-        msg = error
-    }
-
-    res.json({msg:msg})
-}
+  try {   
+    const { id_tour, id_guia, fecha_inicio, fecha_fin } = req.body;
+    const id = req.params.id
+    await Agenda_guia.findOneAndUpdate(
+      {_id: id},
+      { id_tour, id_guia,fecha_inicio, fecha_fin }
+    );
+    res.json({ msg: 'Agenda updated' });
+  } catch (error) {
+    res.status(500).json({ msg: 'Error updating agenda' });
+  }
+};
 
 const deleteAgenda_guia = async (req, res) => {
+  try {
     const id = req.params.id;
-    let msg = 'Agenda deleted';
-    try{
-        await Agenda_guia.findByIdAndDelete({_id_tour: id});
-    }catch(error){
-        msg = 'There was a problem while deleting';
-    }
-
-    res.json({msg:msg});
-}
+    await Agenda_guia.findOneAndDelete({_id: id});
+    res.json({ msg: 'Agenda deleted' });
+  } catch (error) {
+    res.status(500).json({ msg: 'Error deleting agenda' });
+  }
+};
 
 module.exports = {
-    getAgenda_guia,
-    postAgenda_guia,
-    putAgenda_guia,
-    deleteAgenda_guia
-}
+  getAgenda_guia,
+  getAgenda_guiaById,
+  postAgenda_guia,
+  putAgenda_guia,
+  deleteAgenda_guia
+};

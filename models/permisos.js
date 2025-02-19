@@ -8,7 +8,12 @@ const permisosSchema = new Schema({
     descripcion: {
         type: String,
         required: [true, 'Descripcion is require']
+    },
+    estado: {
+        type: Boolean,
+        default: true
     }
+
 });
 
-module.exports = model('Permisos', permisosSchema, 'permisos'); 
+module.exports = model('Permisos', permisosSchema, 'permisos');

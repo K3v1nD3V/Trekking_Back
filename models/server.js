@@ -1,57 +1,56 @@
 const dbConnect = require('../database/config');
-const express = require('express'); 
+const express = require('express');
 const cors = require('cors');
 
-const { getAgenda_guia, getAgenda_guiaById, postAgenda_guia, putAgenda_guia, deleteAgenda_guia } = require('../controllers/agenda_guiaController')
-const { getPrivilegios, postPrivilegios, putPrivilegios, deletePrivilegios } = require('../controllers/privilegiosController')
-const { getPermisos, getPermiso,postPermisos, putPermisos, deletePermisos } = require('../controllers/permisosController')
+const clienteRoutes = require('../routes/clienteRoutes');
+const privilegiosRoutes = require('../routes/privilegiosRoutes');
+const permisosRoutes = require('../routes/permisosRoutes');
+const pagoRoutes = require('../routes/pagoRoutes');
+const paqueteRoutes = require('../routes/paqueteRoutes');
+const servicioRoutes = require('../routes/servicioRoutes');
+const tourRoutes = require('../routes/tourRoutes');
+const usuarioRoutes = require('../routes/usuarioRoutes');
 
-class Server{
-    constructor(){
+class Server {
+
+
+
+
+    constructor() {
         this.app = express();
         this.listen();
         this.dbConnection();
-        this.pathAgenda_guia = '/api/agenda_guia';
-        this.pathPrivilegios = '/api/privilegios';
-        this.pathPermisos = '/api/permisos';
         this.route();
+    }
 
-    }   
-
-    listen(){
+    listen() {
         this.app.listen(process.env.PORT, () => {
-            console.log(`Server is running`);  
-        })
+            console.log(`Server is running`);
+        });
     }
 
-    route(){
+    route() {
         this.app.use(express.json());
-        this.app.use( cors() );
+        this.app.use(cors());
         
-        // agenda_guia
-        this.app.get(this.pathAgenda_guia, getAgenda_guia);
-        this.app.get(this.pathAgenda_guia + '/:id', getAgenda_guiaById);
-        this.app.post(this.pathAgenda_guia, postAgenda_guia);
-        this.app.put(this.pathAgenda_guia+'/:id', putAgenda_guia);
-        this.app.delete(this.pathAgenda_guia+'/:id', deleteAgenda_guia);
+        // Rutas
+        this.app.use('/api/clientes', clienteRoutes);
+        this.app.use('/api/privilegios', privilegiosRoutes);
+        this.app.use('/api/permisos', permisosRoutes);
+        this.app.use('/api/pagos', pagoRoutes);
+        this.app.use('/api/paquetes', paqueteRoutes);
+        this.app.use('/api/servicios', servicioRoutes);
+        this.app.use('/api/tours', tourRoutes);
+        this.app.use('/api/usuarios', usuarioRoutes);
 
-        // privilegios
-        this.app.get(this.pathPrivilegios, getPrivilegios);
-        this.app.post(this.pathPrivilegios, postPrivilegios);
-        this.app.put(this.pathPrivilegios+'/:id', putPrivilegios);
-        this.app.delete(this.pathPrivilegios+'/:id', deletePrivilegios);
-        
-        // permisos
-        this.app.get(this.pathPermisos, getPermisos);
-        this.app.get(this.pathPermisos+'/:id', getPermiso);
-        this.app.post(this.pathPermisos, postPermisos);
-        this.app.put(this.pathPermisos+'/:id', putPermisos);
-        this.app.delete(this.pathPermisos+'/:id', deletePermisos);
-        
+
+
+
     }
+
     async dbConnection() {
-        await dbConnect()
+        await dbConnect();
     }
 }
 
-module.exports =  Server 
+module.exports = Server;

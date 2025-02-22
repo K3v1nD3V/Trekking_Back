@@ -1,14 +1,14 @@
-const {model, Schema} = require('mongoose');
+const { model, Schema } = require('mongoose');
 
 const privilegiosSchema = new Schema({
-    nombre: {
+    descripcion: {
         type: String,
-        required: [true, 'The name is requiere']
+        required: [true, 'La descripción es requerida']
     },
-    permisos: {
-        type: Array,
-        required: [true, 'Permisos are require']
+    estado: {
+        type: Boolean,
+        default: true
     }
 });
 
-module.exports = model('Privilegios', privilegiosSchema, 'privilegios'); 
+module.exports = model('Privilegios', privilegiosSchema);

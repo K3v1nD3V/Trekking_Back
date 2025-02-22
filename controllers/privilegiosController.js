@@ -1,53 +1,53 @@
 const Privilegios = require('../models/privilegios');
 
+// Obtener todos los privilegios
 const getPrivilegios = async (req, res) => {
-  try {
-    const privilegios = await Privilegios.find();
-    res.json(privilegios);
-  } catch (error) {
-    res.status(500).json({ msg: 'Error fetching privilegios' });
-  }
-};
-
-const postPrivilegios = async (req, res) => {
-  try {
-    const body = req.body;
-    const privilegios = new Privilegios(body);
-    await privilegios.save();
-    res.json({ msg: 'Privilegios inserted' });
-  } catch (error) {
-    res.status(400).json({ msg: 'Error inserting privilegios: ', error });
-  }
-};
-
-const putPrivilegios = async (req, res) => {
-  try {
-    const { nombre, permisos} = req.body;
-    const id = req.params.id
-    const privilegios = await Privilegios.findByIdAndUpdate({_id: id}, { nombre, permisos });
-    if (!privilegios) {
-      res.status(404).json({ msg: 'Privilegios not found' });
-    } else {
-      res.json({ msg: 'Privilegios updated' });
+    try {
+        const privilegios = await Privilegios.find();
+        res.json(privilegios);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(400).json({ msg: 'Error updating privilegios' });
-  }
 };
 
-const deletePrivilegios = async (req, res) => {
-  try {
-    const id = req.params.id;
-    await Privilegios.findByIdAndDelete(id);
-    res.json({ msg: 'Privilegios deleted' });
-  } catch (error) {
-    res.status(400).json({ msg: 'Error deleting privilegios' });
-  }
+// Crear un nuevo privilegio
+const postPrivilegio = async (req, res) => {
+    const { descripcion, estado } = req.body;
+    const nuevoPrivilegio = new Privilegios({ descripcion, estado });
+    try {
+        const savedPrivilegio = await nuevoPrivilegio.save();
+        res.status(201).json(savedPrivilegio);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Actualizar un privilegio
+const putPrivilegio = async (req, res) => {
+    const { id } = req.params;
+    const { descripcion, estado } = req.body;
+    try {
+        const updatedPrivilegio = await Privilegios.findByIdAndUpdate(id, { descripcion, estado }, { new: true });
+        res.json(updatedPrivilegio);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Eliminar un privilegio
+const deletePrivilegio = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Privilegios.findByIdAndDelete(id);
+        res.status(204).send();
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 };
 
 module.exports = {
-  getPrivilegios,
-  postPrivilegios,
-  putPrivilegios,
-  deletePrivilegios
+    getPrivilegios,
+    postPrivilegio,
+    putPrivilegio,
+    deletePrivilegio
 };

@@ -1,18 +1,21 @@
-const express = require('express');
-const router = express.Router();
+const { Router } = require('express');
+const { getPermisos, getPermisoById, postPermiso, putPermiso, deletePermiso } = require('../controllers/permisosController');
 
-const { 
-  getPermisos, 
-  getPermiso, 
-  postPermisos, 
-  putPermisos, 
-  deletePermisos 
-} = require('../controllers/permisosController');
+const router = Router();
 
+// Obtener todos los permisos
 router.get('/', getPermisos);
-router.get('/:id', getPermiso);
-router.post('/', postPermisos);
-router.put('/:id', putPermisos);
-router.delete('/:id', deletePermisos);
+
+// Obtener un permiso por ID
+router.get('/:id', getPermisoById);
+
+// Crear un nuevo permiso
+router.post('/', postPermiso);
+
+// Actualizar un permiso
+router.put('/:id', putPermiso);
+
+// Eliminar un permiso
+router.delete('/:id', deletePermiso);
 
 module.exports = router;

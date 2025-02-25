@@ -1,21 +1,20 @@
 const { Router } = require('express');
+const authMiddleware = require('../middlewares/authMiddleware'); // Importar el middleware de autenticación
+
 const { getRoles, getRolById, postRol, putRol, deleteRol } = require('../controllers/rolController');
 
 const router = Router();
 
-// Obtener todos los roles
-router.get('/', getRoles);
+router.get('/', authMiddleware(), getRoles); // Ruta para obtener todos los roles
 
-// Obtener un rol por ID
-router.get('/:id', getRolById);
+router.get('/:id', authMiddleware(), getRolById); // Ruta para obtener un rol por ID
 
-// Crear un nuevo rol
-router.post('/', postRol);
+router.post('/', authMiddleware(['admin']), postRol); // Ruta para crear un nuevo rol
 
-// Actualizar un rol
-router.put('/:id', putRol);
+router.put('/:id', authMiddleware(['admin']), putRol); // Ruta para actualizar un rol
 
-// Eliminar un rol
-router.delete('/:id', deleteRol);
+router.delete('/:id', authMiddleware(['admin']), deleteRol); // Ruta para eliminar un rol
+
+
 
 module.exports = router;

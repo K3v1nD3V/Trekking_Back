@@ -1,21 +1,24 @@
 const { Router } = require('express');
+const authMiddleware = require('../middlewares/authMiddleware'); // Importar el middleware de autenticación
+
 const { getPermisos, getPermisoById, postPermiso, putPermiso, deletePermiso } = require('../controllers/permisosController');
 
 const router = Router();
 
-// Obtener todos los permisos
-router.get('/', getPermisos);
+router.get('/', authMiddleware(), getPermisos); // Ruta para obtener todos los permisos
 
-// Obtener un permiso por ID
-router.get('/:id', getPermisoById);
 
-// Crear un nuevo permiso
-router.post('/', postPermiso);
+router.get('/:id', authMiddleware(), getPermisoById); // Ruta para obtener un permiso por ID
 
-// Actualizar un permiso
-router.put('/:id', putPermiso);
 
-// Eliminar un permiso
-router.delete('/:id', deletePermiso);
+router.post('/', authMiddleware(['admin']), postPermiso); // Ruta para crear un nuevo permiso
+
+
+router.put('/:id', authMiddleware(['admin']), putPermiso); // Ruta para actualizar un permiso
+
+
+router.delete('/:id', authMiddleware(['admin']), deletePermiso); // Ruta para eliminar un permiso
+
+
 
 module.exports = router;

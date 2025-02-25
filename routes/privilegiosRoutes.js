@@ -1,18 +1,19 @@
 const { Router } = require('express');
+const authMiddleware = require('../middlewares/authMiddleware');
 const { getPrivilegios, postPrivilegio, putPrivilegio, deletePrivilegio } = require('../controllers/privilegiosController');
 
 const router = Router();
 
-// Obtener todos los privilegios
-router.get('/', getPrivilegios);
+router.get('/', authMiddleware(), getPrivilegios);
 
-// Crear un nuevo privilegio
-router.post('/', postPrivilegio);
 
-// Actualizar un privilegio
-router.put('/:id', putPrivilegio);
+router.post('/', authMiddleware(['admin']), postPrivilegio);
 
-// Eliminar un privilegio
-router.delete('/:id', deletePrivilegio);
+
+router.put('/:id', authMiddleware(['admin']), putPrivilegio);
+
+
+router.delete('/:id', authMiddleware(['admin']), deletePrivilegio);
+
 
 module.exports = router;

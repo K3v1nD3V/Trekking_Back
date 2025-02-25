@@ -10,8 +10,9 @@ const paqueteRoutes = require('../routes/paqueteRoutes');
 const servicioRoutes = require('../routes/servicioRoutes');
 const tourRoutes = require('../routes/tourRoutes');
 const usuarioRoutes = require('../routes/usuarioRoutes');
-const rolRoutes = require('../routes/rolRoutes'); // Importar las rutas de rol
+const rolRoutes = require('../routes/rolRoutes');
 
+const errorMiddleware = require('../middlewares/errorMiddleware')
 class Server {
     constructor() {
         this.app = express();
@@ -39,7 +40,9 @@ class Server {
         this.app.use('/api/servicios', servicioRoutes);
         this.app.use('/api/tours', tourRoutes);
         this.app.use('/api/usuarios', usuarioRoutes);
-        this.app.use('/api/roles', rolRoutes); // Agregar las rutas de rol
+        this.app.use('/api/roles', rolRoutes); 
+
+        this.app.use(errorMiddleware)
     }
 
     async dbConnection() {

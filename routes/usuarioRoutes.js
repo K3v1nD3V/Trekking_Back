@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middlewares/authMiddleware'); // Importar el middleware de autenticación
 
 const {
     getUsuarios,
@@ -9,10 +10,10 @@ const {
     deleteUsuario
 } = require('../controllers/usuarioController');
 
-router.get('/', getUsuarios);
-router.get('/:id', getUsuarioById);
-router.post('/', createUsuario);
-router.put('/:id', updateUsuario);
-router.delete('/:id', deleteUsuario);
+router.get('/', authMiddleware(), getUsuarios);
+router.get('/:id', authMiddleware(), getUsuarioById);
+router.post('/', authMiddleware(['admin']), createUsuario);
+router.put('/:id', authMiddleware(['admin']), updateUsuario);
+router.delete('/:id', authMiddleware(['admin']), deleteUsuario);
 
 module.exports = router;

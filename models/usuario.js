@@ -1,4 +1,5 @@
 const { model, Schema } = require('mongoose');
+const bcrypt = require('bcrypt'); // Importar bcrypt para encriptar contraseñas
 
 const usuarioSchema = new Schema({
     nombre: {
@@ -9,7 +10,19 @@ const usuarioSchema = new Schema({
         type: String,
         required: [true, 'El correo es requerido'],
         unique: true
+    },
+    contraseña: {
+        type: String,
+        required: [true, 'La contraseña es requerida']
     }
+});
+
+// Middleware para encriptar la contraseña antes de guardar
+usuarioSchema.pre('save', async function(next) {
+    if (this.isModified('contraseña')) {
+        this.contraseña = await bcrypt.hash(this.contraseña, 10);
+    }
+    next();
 });
 
 module.exports = model('Usuario', usuarioSchema);

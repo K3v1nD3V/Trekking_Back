@@ -1,5 +1,6 @@
 const Cliente = require('../models/cliente');
 
+
 const getClientes = async (req, res) => {
   try {
     const clientes = await Cliente.find();

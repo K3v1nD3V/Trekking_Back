@@ -1,6 +1,8 @@
 const { Router } = require('express');
-const authMiddleware = require('../middlewares/authMiddleware'); // Importar el middleware de autenticación
-const { validatePermiso, validate } = require('../middlewares/validationMiddleware'); // Importar el middleware de validación
+const authMiddleware = require('../middlewares/authMiddleware');
+
+const { validatePermiso, validate } = require('../middlewares/validationMiddleware'); 
+
 const { getPermisos, getPermisoById, postPermiso, putPermiso, deletePermiso } = require('../controllers/permisosController');
 
 const router = Router();

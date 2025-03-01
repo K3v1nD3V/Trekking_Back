@@ -2,7 +2,6 @@ const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt'); // Importar bcrypt para comparar contraseñas
 const jwt = require('jsonwebtoken'); // Importar jsonwebtoken para generar tokens
 
-
 const getUsuarios = async (req, res) => {
     try {
         const usuarios = await Usuario.find();
@@ -46,13 +45,12 @@ const { nombre, correo, contraseña } = req.body; // Aceptar la nueva contraseñ
         const updates = { nombre, correo };
 
         if (contraseña) {
-            updates.contraseña = await bcrypt.hash(contraseña, 10); // Encriptar la nueva contraseña
+            updates.contraseña = await bcrypt.hash(contraseña, 10); // Hashear la nueva contraseña
         }
 
         const usuarioActualizado = await Usuario.findByIdAndUpdate(
             req.params.id,
             updates,
-
             { new: true }
         );
         if (!usuarioActualizado) {
@@ -92,6 +90,9 @@ const loginUsuario = async (req, res) => {
     }
 
     // Generar el token JWT
+    console.log(process.env.JWT_SECRET);
+    console.log(usuario._id );
+    
     const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.json({ token });
@@ -103,5 +104,5 @@ module.exports = {
     createUsuario,
     updateUsuario,
     deleteUsuario,
-    loginUsuario // Exportar la función de login
+    loginUsuario 
 };

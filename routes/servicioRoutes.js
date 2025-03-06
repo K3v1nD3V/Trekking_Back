@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const errorMiddleware = require('../middlewares/errorMiddleware');
 
 const {
     getServicios,
@@ -15,4 +16,8 @@ router.post('/', createServicio);
 router.put('/:id', updateServicio);
 router.delete('/:id', deleteServicio);
 
+router.use(errorMiddleware);
+
 module.exports = router;
+
+router.use(errorMiddleware);

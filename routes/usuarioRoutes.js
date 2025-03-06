@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware'); 
-
+const errorMiddleware = require('../middlewares/errorMiddleware'); // Línea añadida
 
 const {
     getUsuarios,
@@ -18,5 +18,7 @@ router.post('/', createUsuario);
 router.post('/login', loginUsuario);
 router.put('/:id', authMiddleware(['admin']), updateUsuario);
 router.delete('/:id', authMiddleware(['admin']), deleteUsuario);
+
+router.use(errorMiddleware); // Middleware de manejo de errores
 
 module.exports = router;

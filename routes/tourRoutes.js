@@ -1,8 +1,9 @@
 const express = require('express');
-const {getTours, getTourById, createTour, updateTour, deleteTour } = require('../controllers/tourController');
-const {validateTour} = require('../middlewares/tourValidation'); 
+const { getTours, getTourById, createTour, updateTour, deleteTour } = require('../controllers/tourController');
+const validateTour = require('../middlewares/tourValidation'); 
 const authMiddleware = require('../middlewares/authMiddleware');
-const validate = require('../middlewares/validationMiddleware')
+const errorMiddleware = require('../middlewares/errorMiddleware'); // Línea añadida
+const validate = require('../middlewares/validationMiddleware'); 
 
 const router = express.Router();
 
@@ -13,3 +14,4 @@ router.put('/:id', authMiddleware(),validateTour,validate, updateTour);
 router.delete('/:id',authMiddleware(), validateTour, deleteTour);
 
 module.exports = router;
+router.use(errorMiddleware);

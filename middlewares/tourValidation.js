@@ -13,4 +13,3 @@ const validateTour = [
         .isMongoId().withMessage('El ID del paquete no es válido')
 ];
 module.exports = validateTour
-

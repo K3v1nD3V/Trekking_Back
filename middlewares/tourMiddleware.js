@@ -14,15 +14,4 @@ const tourBaseValidation = [
         .isMongoId().withMessage('El ID del paquete no es válido')
 ];
 
-const validate = (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-};
-
-module.exports = {
-    tourBaseValidation,
-    validate
-};
+module.exports = tourBaseValidation;

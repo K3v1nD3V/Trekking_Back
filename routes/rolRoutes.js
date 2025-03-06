@@ -1,14 +1,22 @@
 const { Router } = require('express');
 const authMiddleware = require('../middlewares/authMiddleware'); 
-const { validateRol, validate } = require('../middlewares/validationMiddleware'); 
 const { getRoles, getRolById, postRol, putRol, deleteRol } = require('../controllers/rolController');
+const rolValidate = require('../middlewares/rolValidation');
+const validate = require('../middlewares/validationMiddleware');
+const errorMiddleware = require('../middlewares/errorMiddleware'); // Add this line
+
 
 const router = Router();
 
 router.get('/', authMiddleware(), getRoles);
 router.get('/:id', authMiddleware(), getRolById);
-router.post('/', authMiddleware(['admin']), validateRol, validate, postRol);
-router.put('/:id', authMiddleware(['admin']), validateRol, validate, putRol);
+router.post('/', authMiddleware(['admin']), rolValidate, validate, postRol);
+router.put('/:id', authMiddleware(['admin']), rolValidate, validate, putRol);
 router.delete('/:id', authMiddleware(['admin']), deleteRol);
 
+router.use(errorMiddleware);
+
 module.exports = router;
+
+// Error handling middleware
+router.use(errorMiddleware);

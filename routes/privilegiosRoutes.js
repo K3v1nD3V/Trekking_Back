@@ -3,8 +3,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const { getPrivilegios, postPrivilegio, putPrivilegio, deletePrivilegio } = require('../controllers/privilegiosController');
 const privilegioValidate = require('../middlewares/privilegioValidation');
 const validate = require('../middlewares/validationMiddleware');
-const errorMiddleware = require('../middlewares/errorMiddleware'); // Add this line
-
+const errorMiddleware = require('../middlewares/errorMiddleware');
 
 const router = Router();
 

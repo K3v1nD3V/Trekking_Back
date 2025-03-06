@@ -18,5 +18,4 @@ router.use(errorMiddleware);
 
 module.exports = router;
 
-// Error handling middleware
 router.use(errorMiddleware);

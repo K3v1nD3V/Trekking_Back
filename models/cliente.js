@@ -6,11 +6,11 @@ const clienteSchema = new Schema({
         required: [true, 'El documento es requerido'],
         unique: true
     },
-    nombres: {
+    nombre: {
         type: String,
         required: [true, 'Los nombres son requeridos']
     },
-    apellidos: {
+    apellido: {
         type: String,
         required: [true, 'Los apellidos son requeridos']
     },

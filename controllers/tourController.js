@@ -26,7 +26,6 @@ const createTour = async (req, res) => {
     try {
         const { fecha_inicio, fecha_fin, id_paquete } = req.body;
         
-        // Verify if the referenced package exists
         const paqueteExists = await Paquete.findById(id_paquete);
         if (!paqueteExists) {
             return res.status(400).json({ message: 'El paquete especificado no existe' });
@@ -49,7 +48,6 @@ const updateTour = async (req, res) => {
     try {
         const { fecha_inicio, fecha_fin, id_paquete } = req.body;
         
-        // Verify if the referenced package exists
         if (id_paquete) {
             const paqueteExists = await Paquete.findById(id_paquete);
             if (!paqueteExists) {

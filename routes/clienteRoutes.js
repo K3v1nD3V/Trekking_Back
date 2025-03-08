@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const errorMiddleware = require('../middlewares/errorMiddleware'); // Línea añadida
+const errorMiddleware = require('../middlewares/errorMiddleware'); 
 
 const { 
   getClientes, 
@@ -15,7 +15,7 @@ const {
 } = require('../middlewares/clienteMiddleware'); 
 
 router.get('/', getClientes);
-router.get('/:id', getClienteById);
+router.get('/:id', clienteBaseValidation, getClienteById);
 router.post('/', clienteBaseValidation, postCliente);
 router.put('/:id',clienteBaseValidation, putCliente);
 router.delete('/:id', clienteBaseValidation, deleteCliente);

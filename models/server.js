@@ -12,6 +12,7 @@ const tourRoutes = require('../routes/tourRoutes');
 const usuarioRoutes = require('../routes/usuarioRoutes');
 const rolRoutes = require('../routes/rolRoutes');
 const facturaRoutes = require('../routes/facturaRoutes');
+const guiaRoutes = require('../routes/guiaRoutes');
 
 
 const errorMiddleware = require('../middlewares/errorMiddleware')
@@ -44,6 +45,7 @@ class Server {
         this.app.use('/api/usuarios', usuarioRoutes);
         this.app.use('/api/roles', rolRoutes); 
         this.app.use('/api/facturas', facturaRoutes)
+        this.app.use('/api/guias', guiaRoutes)
 
         this.app.use(errorMiddleware)
     }

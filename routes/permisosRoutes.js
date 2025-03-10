@@ -12,6 +12,6 @@ router.post('/', authMiddleware(['admin']), validatePermiso, postPermiso);
 router.put('/:id', authMiddleware(['admin']), validatePermiso, putPermiso);
 router.delete('/:id', authMiddleware(['admin']), deletePermiso);
 
-router.use(errorMiddleware); // Middleware de manejo de errores
+router.use(errorMiddleware); 
 
 module.exports = router;

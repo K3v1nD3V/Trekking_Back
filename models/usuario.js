@@ -17,7 +17,6 @@ const usuarioSchema = new Schema({
     }
 });
 
-// Middleware para encriptar la contraseña antes de guardar
 usuarioSchema.pre('save', async function(next) {
     if (this.isModified('contraseña')) {
         this.contraseña = await bcrypt.hash(this.contraseña, 10);

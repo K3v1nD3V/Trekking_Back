@@ -9,10 +9,15 @@ const {
   deletePago 
 } = require('../controllers/pagoController');
 
+const {
+  pagoBaseValidation
+} = require('../middlewares/pagoMiddleware'); 
+
 router.get('/', getPagos);
-router.get('/:id', getPagoById);
-router.post('/', postPago);
-router.put('/:id', putPago);
-router.delete('/:id', deletePago);
+router.get('/:id', pagoBaseValidation, getPagoById);
+router.post('/', pagoBaseValidation, postPago);
+router.put('/:id',pagoBaseValidation, putPago);
+router.delete('/:id', pagoBaseValidation, deletePago);
 
 module.exports = router;
+

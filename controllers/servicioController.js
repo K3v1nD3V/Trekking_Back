@@ -27,7 +27,7 @@ const createServicio = async (req, res) => {
         const nuevoServicio = new Servicio({
             nombre,
             precio,
-            estado: estado !== undefined ? estado : true,
+            estado: estado ?? true,
             categoria
         });
         const servicioGuardado = await nuevoServicio.save();
@@ -39,15 +39,20 @@ const createServicio = async (req, res) => {
 
 const updateServicio = async (req, res) => {
     try {
-        const { nombre, precio, estado, categoria } = req.body;
-        const servicioActualizado = await Servicio.findByIdAndUpdate(
-            req.params.id,
-            { nombre, precio, estado, categoria },
-            { new: true }
-        );
-        if (!servicioActualizado) {
+        const { id } = req.params;
+        const servicioExistente = await Servicio.findById(id);
+
+        if (!servicioExistente) {
             return res.status(404).json({ message: 'Servicio no encontrado' });
         }
+
+        const { nombre, precio, estado, categoria } = req.body;
+        servicioExistente.nombre = nombre ?? servicioExistente.nombre;
+        servicioExistente.precio = precio ?? servicioExistente.precio;
+        servicioExistente.estado = estado ?? servicioExistente.estado;
+        servicioExistente.categoria = categoria ?? servicioExistente.categoria;
+
+        const servicioActualizado = await servicioExistente.save();
         res.json(servicioActualizado);
     } catch (error) {
         res.status(400).json({ message: error.message });

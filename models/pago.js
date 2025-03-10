@@ -1,19 +1,10 @@
-const { model, Schema } = require('mongoose');
+const mongoose = require('mongoose');
+const { Schema } = mongoose; // Extrae Schema desde mongoose
 
 const pagoSchema = new Schema({
-    fecha: {
-        type: Date,
-        required: [true, 'La fecha es requerida']
-    },
-    valor: {
-        type: Number,
-        required: [true, 'El valor es requerido']
-    },
-    id_factura: {
-        type: Number,
-        required: [true, 'El id de factura es requerido'],
-        unique: true
-    }
+    id_factura: { type: Schema.Types.ObjectId, ref: 'Factura', required: true },
+    valor: { type: Number, required: true },
+    fecha: { type: Date, required: true }
 });
 
-module.exports = model('Pago', pagoSchema, 'pagos');
+module.exports = mongoose.model('Pago', pagoSchema);

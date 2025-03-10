@@ -1,4 +1,6 @@
 const Pago = require('../models/pago');
+const {validationResult} = require('express-validator');
+
 
 const getPagos = async (req, res) => {
   try {
@@ -10,6 +12,10 @@ const getPagos = async (req, res) => {
 };
 
 const getPagoById = async (req, res) => {
+  const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+          return res.status(400).json({errors: errors.array()})
+        }
   try {
     const { id } = req.params;
     const pago = await Pago.findById(id);
@@ -20,6 +26,10 @@ const getPagoById = async (req, res) => {
 };
 
 const postPago = async (req, res) => {
+   const errors = validationResult(req);
+        if(!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()})
+        }
   try {
     const { body } = req;
     const pago = new Pago(body);
@@ -31,6 +41,10 @@ const postPago = async (req, res) => {
 };
 
 const putPago = async (req, res) => {
+  const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+       return res.status(400).json({errors: errors.array()})
+        }
   try {
     const { fecha, valor, id_factura } = req.body;
     const id = req.params.id;
@@ -45,6 +59,10 @@ const putPago = async (req, res) => {
 };
 
 const deletePago = async (req, res) => {
+  const errors = validationResult(req);
+      if(!errors.isEmpty()) {
+          return res.status(400).json({errors: errors.array()})
+      }
   try {
     const id = req.params.id;
     await Pago.findOneAndDelete({ _id: id });

@@ -1,6 +1,8 @@
 const Cliente = require('../models/cliente');
+const {validationResult} = require('express-validator');
 
 const getClientes = async (req, res) => {
+  
   try {
     const clientes = await Cliente.find();
     res.json(clientes);
@@ -10,6 +12,10 @@ const getClientes = async (req, res) => {
 };
 
 const getClienteById = async (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) {
+      return res.status(400).json({errors: errors.array()})
+  }
   try {
     const { id } = req.params;
     const cliente = await Cliente.findById(id);
@@ -20,6 +26,10 @@ const getClienteById = async (req, res) => {
 };
 
 const postCliente = async (req, res) => {
+  const errors = validationResult(req);
+      if(!errors.isEmpty()) {
+          return res.status(400).json({errors: errors.array()})
+      }
   try {
     const { body } = req;
     const cliente = new Cliente(body);
@@ -31,12 +41,16 @@ const postCliente = async (req, res) => {
 };
 
 const putCliente = async (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) {
+      return res.status(400).json({errors: errors.array()})
+  }
   try {
-    const { documento, nombres, apellidos, correo, telefono, estado } = req.body;
+    const { documento, nombre, apellido, correo, telefono, estado } = req.body;
     const id = req.params.id;
     await Cliente.findOneAndUpdate(
       { _id: id },
-      { documento, nombres, apellidos, correo, telefono, estado }
+      { documento, nombre, apellido, correo, telefono, estado }
     );
     res.json({ msg: 'Cliente actualizado exitosamente' });
   } catch (error) {
@@ -45,6 +59,10 @@ const putCliente = async (req, res) => {
 };
 
 const deleteCliente = async (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) {
+      return res.status(400).json({errors: errors.array()})
+  }
   try {
     const id = req.params.id;
     await Cliente.findOneAndDelete({ _id: id });

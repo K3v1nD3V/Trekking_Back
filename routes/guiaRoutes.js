@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const errorMiddleware = require('../middlewares/errorMiddleware'); 
+const validate = require('../middlewares/validationMiddleware'); 
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const { 
     getGuias, 
@@ -11,14 +13,18 @@ const {
 } = require('../controllers/guiaController');
 
 const {
-  guiaBaseValidation
+  guiaBaseValidation,
+  updateGuiaValidation,
+  deleteGuiaValidation,
+  getGuiaByIdValidation
+
 } = require('../middlewares/guiaMiddleware'); 
 
-router.get('/', getGuias);
-router.get('/:id', guiaBaseValidation, getGuiaById);
-router.post('/', guiaBaseValidation, postGuia);
-router.put('/:id',guiaBaseValidation, putGuia);
-router.delete('/:id', guiaBaseValidation, deleteGuia);
+router.get('/', authMiddleware(), validate, getGuias);
+router.get('/:id', authMiddleware(), getGuiaByIdValidation, validate, getGuiaById);
+router.post('/', authMiddleware(), guiaBaseValidation, validate, postGuia);
+router.put('/:id',authMiddleware(), updateGuiaValidation, validate, putGuia);
+router.delete('/:id', authMiddleware(), deleteGuiaValidation, validate, deleteGuia);
 
 router.use(errorMiddleware);
 

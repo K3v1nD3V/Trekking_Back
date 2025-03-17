@@ -4,15 +4,15 @@ const router = express.Router();
 const {getFacturas, getFacturaById, postFactura} = require('../controllers/facturaController');
 const {
     facturaBaseValidation,
-    validate
 } = require('../middlewares/facturaMiddleware'); 
 
 const authMiddleware = require('../middlewares/authMiddleware');
+const validate = require('../middlewares/validationMiddleware'); 
 
 
-router.get('/', authMiddleware(),facturaBaseValidation, getFacturas);
-router.get('/:id', authMiddleware(), facturaBaseValidation, getFacturaById);
-router.post('/', authMiddleware(),facturaBaseValidation, validate, postFactura);
+router.get('/', authMiddleware(['admin']),facturaBaseValidation, validate, getFacturas);
+router.get('/:id', authMiddleware(['admin']), facturaBaseValidation, validate, getFacturaById);
+router.post('/', authMiddleware(['admin']),facturaBaseValidation, validate, postFactura);
 
 
 module.exports = router;

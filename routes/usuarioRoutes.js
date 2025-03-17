@@ -19,6 +19,6 @@ router.post('/login', loginUsuario);
 router.put('/:id', authMiddleware(['admin']), updateUsuario);
 router.delete('/:id', authMiddleware(['admin']), deleteUsuario);
 
-router.use(errorMiddleware); // Middleware de manejo de errores
+router.use(errorMiddleware);
 
 module.exports = router;

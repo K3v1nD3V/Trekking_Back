@@ -1,7 +1,6 @@
 const Cliente = require('../models/cliente');
 const {validationResult} = require('express-validator');
 
-
 const getClientes = async (req, res) => {
   
   try {

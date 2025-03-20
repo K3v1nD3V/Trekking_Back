@@ -14,7 +14,13 @@ const usuarioSchema = new Schema({
     contraseña: {
         type: String,
         required: [true, 'La contraseña es requerida']
+    },
+    rol: {
+        type: Schema.Types.ObjectId,
+        ref: 'Rol',
+        required: [true, 'El rol es requerido']
     }
+
 });
 
 usuarioSchema.pre('save', async function(next) {

@@ -1,6 +1,6 @@
 const Usuario = require('../models/usuario');
-const bcrypt = require('bcrypt'); // Importar bcrypt para comparar contraseñas
-const jwt = require('jsonwebtoken'); // Importar jsonwebtoken para generar tokens
+const bcrypt = require('bcrypt'); 
+const jwt = require('jsonwebtoken'); 
 
 const getUsuarios = async (req, res) => {
     try {
@@ -25,13 +25,14 @@ const getUsuarioById = async (req, res) => {
 
 const createUsuario = async (req, res) => {
     try {
-const { nombre, correo, contraseña } = req.body; // Asegurarse de que la contraseña se reciba
+        const { nombre, correo, contraseña, rol } = req.body; 
         const nuevoUsuario = new Usuario({
             nombre,
             correo,
-            contraseña // Asignar la contraseña al nuevo usuario
-
+            contraseña,
+            rol 
         });
+
         const usuarioGuardado = await nuevoUsuario.save();
         res.status(201).json(usuarioGuardado);
     } catch (error) {
@@ -41,11 +42,11 @@ const { nombre, correo, contraseña } = req.body; // Asegurarse de que la contra
 
 const updateUsuario = async (req, res) => {
     try {
-const { nombre, correo, contraseña } = req.body; // Aceptar la nueva contraseña
-        const updates = { nombre, correo };
+        const { nombre, correo, contraseña, rol } = req.body; 
+        const updates = { nombre, correo, rol }; 
 
         if (contraseña) {
-            updates.contraseña = await bcrypt.hash(contraseña, 10); // Hashear la nueva contraseña
+            updates.contraseña = await bcrypt.hash(contraseña, 10); 
         }
 
         const usuarioActualizado = await Usuario.findByIdAndUpdate(
@@ -90,9 +91,6 @@ const loginUsuario = async (req, res) => {
     }
 
     // Generar el token JWT
-    console.log(process.env.JWT_SECRET);
-    console.log(usuario._id );
-    
     const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.json({ token });

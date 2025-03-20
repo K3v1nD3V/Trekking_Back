@@ -7,8 +7,8 @@ const errorMiddleware = require('../middlewares/errorMiddleware');
 
 const router = Router();
 
-router.get('/', authMiddleware(), getPrivilegios);
-router.post('/', authMiddleware(['admin']), privilegioValidate, validate, postPrivilegio);
+router.get('/', getPrivilegios);
+router.post('/', privilegioValidate, validate, postPrivilegio);
 router.put('/:id', authMiddleware(['admin']), privilegioValidate, validate, putPrivilegio);
 router.delete('/:id', authMiddleware(['admin']), deletePrivilegio);
 

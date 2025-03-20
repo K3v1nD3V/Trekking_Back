@@ -9,9 +9,9 @@ const router = express.Router();
 
 router.get('/', authMiddleware(),validateTour, getTours);
 router.get('/:id', authMiddleware(), validateTour, getTourById);
-router.post('/', authMiddleware(),validateTour, validate, createTour);
-router.put('/:id', authMiddleware(),validateTour,validate, updateTour);
-router.delete('/:id',authMiddleware(), validateTour, deleteTour);
+router.post('/', authMiddleware(['admin']),validateTour, validate, createTour);
+router.put('/:id', authMiddleware(['admin']),validateTour,validate, updateTour);
+router.delete('/:id',authMiddleware(['admin']), validateTour, deleteTour);
 
 module.exports = router;
 router.use(errorMiddleware);

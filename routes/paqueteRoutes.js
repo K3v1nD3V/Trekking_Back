@@ -10,10 +10,11 @@ const router = express.Router();
 
 router.get('/', authMiddleware(), validatePaquete, getPaquetes);
 router.get('/:id', authMiddleware(), validatePaquete, getPaqueteById);
-router.post('/', authMiddleware(), validatePaquete,validate, createPaquete);
-router.put('/:id', authMiddleware(), validatePaquete,validate, updatePaquete);
-router.delete('/:id', authMiddleware(), validatePaquete, deletePaquete);
+router.post('/', authMiddleware(['admin']), validatePaquete,validate, createPaquete);
+router.put('/:id', authMiddleware(['admin']), validatePaquete,validate, updatePaquete);
+router.delete('/:id', authMiddleware(['admin']), validatePaquete, deletePaquete);
+
+router.use(errorMiddleware);
 
 module.exports = router;
 
-router.use(errorMiddleware);

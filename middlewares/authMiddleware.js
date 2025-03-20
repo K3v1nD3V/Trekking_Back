@@ -8,8 +8,8 @@ const authMiddleware = (requiredPermissions = []) => {
         }
         
         try {
-            const verified = jwt.verify(token, process.env.JWT_SECRET); // Usar el secreto desde .env
-            const user = await Usuario.findById(verified.id).populate('rol'); // Obtener el usuario y su rol
+            const verified = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await Usuario.findById(verified.id).populate('rol');
             req.user = user;
 
             // Verificar permisos si se requieren

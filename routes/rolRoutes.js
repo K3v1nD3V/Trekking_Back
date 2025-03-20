@@ -8,9 +8,9 @@ const errorMiddleware = require('../middlewares/errorMiddleware'); // Add this l
 
 const router = Router();
 
-router.get('/', authMiddleware(), getRoles);
+router.get('/', getRoles);
 router.get('/:id', authMiddleware(), getRolById);
-router.post('/', authMiddleware(['admin']), rolValidate, validate, postRol);
+router.post('/', rolValidate, validate, postRol);
 router.put('/:id', authMiddleware(['admin']), rolValidate, validate, putRol);
 router.delete('/:id', authMiddleware(['admin']), deleteRol);
 

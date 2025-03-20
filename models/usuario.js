@@ -1,5 +1,5 @@
 const { model, Schema } = require('mongoose');
-const bcrypt = require('bcrypt'); // Importar bcrypt para encriptar contraseñas
+const bcrypt = require('bcrypt');
 
 const usuarioSchema = new Schema({
     nombre: {
@@ -20,7 +20,6 @@ const usuarioSchema = new Schema({
         ref: 'Rol',
         required: [true, 'El rol es requerido']
     }
-
 });
 
 usuarioSchema.pre('save', async function(next) {

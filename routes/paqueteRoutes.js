@@ -14,6 +14,7 @@ router.post('/', validatePaquete,validate, createPaquete);
 router.put('/:id', validatePaquete,validate, updatePaquete);
 router.delete('/:id', validatePaquete, deletePaquete);
 
+router.use(errorMiddleware);
+
 module.exports = router;
 
-router.use(errorMiddleware);

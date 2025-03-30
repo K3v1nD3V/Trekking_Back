@@ -14,7 +14,7 @@ const {
 
 router.get('/', authMiddleware(), getUsuarios);
 router.get('/:id', authMiddleware(), getUsuarioById);
-router.post('/', createUsuario); // Ruta para crear un nuevo usuario
+router.post('/', authMiddleware(), createUsuario); // Ruta para crear un nuevo usuario
 
 router.post('/login', loginUsuario);
 router.put('/:id', authMiddleware(['admin']), updateUsuario); // Ruta para actualizar un usuario

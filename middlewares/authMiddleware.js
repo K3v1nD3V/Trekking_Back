@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Usuario = require('../models/usuario');
 
 const authMiddleware = (requiredPermissions = []) => {
     return async (req, res, next) => {

@@ -1,7 +1,4 @@
 /node_modules
 
-#fronend se mantendra aqui solo mientras se termina la api y se comienza con el frontend final
-/frontend
-
 package-lock.json
 .env

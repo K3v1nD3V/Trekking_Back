@@ -23,13 +23,14 @@ const getServicioById = async (req, res) => {
 
 const createServicio = async (req, res) => {
     try {
-        const { nombre, precio, estado, categoria } = req.body;
+        const { nombre, descripcion, estado } = req.body;
+
         const nuevoServicio = new Servicio({
             nombre,
-            precio,
-            estado: estado ?? true,
-            categoria
+            descripcion,
+            estado: estado ?? true
         });
+
         const servicioGuardado = await nuevoServicio.save();
         res.status(201).json(servicioGuardado);
     } catch (error) {
@@ -46,11 +47,10 @@ const updateServicio = async (req, res) => {
             return res.status(404).json({ message: 'Servicio no encontrado' });
         }
 
-        const { nombre, precio, estado, categoria } = req.body;
+        const { nombre, descripcion, estado } = req.body;
         servicioExistente.nombre = nombre ?? servicioExistente.nombre;
-        servicioExistente.precio = precio ?? servicioExistente.precio;
+        servicioExistente.descripcion = descripcion ?? servicioExistente.descripcion;
         servicioExistente.estado = estado ?? servicioExistente.estado;
-        servicioExistente.categoria = categoria ?? servicioExistente.categoria;
 
         const servicioActualizado = await servicioExistente.save();
         res.json(servicioActualizado);
@@ -65,7 +65,7 @@ const deleteServicio = async (req, res) => {
         if (!servicioEliminado) {
             return res.status(404).json({ message: 'Servicio no encontrado' });
         }
-        res.json({ message: 'Servicio eliminado correctamente' });
+        res.json({ message: 'Servicio eliminado permanentemente' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -1,11 +1,11 @@
 const { model, Schema } = require('mongoose');
 
 const tourSchema = new Schema({
-    fecha_inicio: {
+    fecha: {
         type: Date,
-        required: [true, 'La fecha de inicio es requerida']
+        required: [true, 'La fecha es requerida']
     },
-    fecha_fin: {
+    Horas: {
         type: Date,
         required: [true, 'La fecha de fin es requerida']
     },

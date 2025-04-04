@@ -30,7 +30,7 @@ const paqueteSchema = new Schema({
     multimedia: [{
         type: [String], 
         default: []  
-    }]
+}]
 });
 
 module.exports = model('Paquete', paqueteSchema);

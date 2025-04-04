@@ -2,7 +2,7 @@ const express = require('express');
 const {getPaquetes,getPaqueteById, createPaquete,updatePaquete, deletePaquete } = require('../controllers/paqueteController');
 const validatePaquete = require('../middlewares/paquetesValidation');
 const authMiddleware = require('../middlewares/authMiddleware');
-const errorMiddleware = require('../middlewares/errorMiddleware'); // Add this line
+const errorMiddleware = require('../middlewares/errorMiddleware'); 
 const validate = require('../middlewares/validationMiddleware'); 
 
 

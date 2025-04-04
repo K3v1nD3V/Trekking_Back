@@ -1,34 +1,34 @@
-const Factura = require('../models/factura');
+const Venta = require('../models/venta');
 const Cliente = require('../models/cliente');
 const Paquete = require('../models/paquete');
 const {validationResult} = require('express-validator');
 
-const getFacturas = async (req, res) => {
+const getVentas = async (req, res) => {
     try {
-        const facturas = await Factura.find()
+        const ventas = await Venta.find()
             .populate('id_cliente')
             .populate('id_paquete');
-        res.json(facturas);
+        res.json(ventas);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const getFacturaById = async (req, res) => {
+const getVentaById = async (req, res) => {
     try {
-        const factura = await Factura.findById(req.params.id)
+        const venta = await Venta.findById(req.params.id)
             .populate('id_cliente')
             .populate('id_paquete');
-        if (!factura) {
-            return res.status(404).json({ message: 'Factura no encontrada' });
+        if (!venta) {
+            return res.status(404).json({ message: 'Venta no encontrada' });
         }
-        res.json(factura);
+        res.json(venta);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const postFactura = async (req, res) => {
+const postVenta = async (req, res) => {
      const errors = validationResult(req);
           if(!errors.isEmpty()) {
               return res.status(400).json({errors: errors.array()})
@@ -49,27 +49,27 @@ const postFactura = async (req, res) => {
         }
 
         // Crear nueva factura
-        const newFactura = new Factura({
+        const newVenta = new Venta({
             id_cliente,
             id_paquete,
             valor,
             fecha: new Date(fecha)
         });
 
-        // Guardar y devolver la factura con datos completos
-        const savedFactura = await newFactura.save();
-        const facturaCompleta = await Factura.findById(savedFactura._id)
+        // Guardar y devolver la venta con datos completos
+        const savedVenta = await newVenta.save();
+        const ventaCompleta = await Venta.findById(savedVenta._id)
             .populate('id_cliente')
             .populate('id_paquete');
 
-        res.status(201).json(facturaCompleta);
+        res.status(201).json(ventaCompleta);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
 module.exports = {
-    getFacturas,
-    getFacturaById,
-    postFactura
+    getVentas,
+    getVentaById,
+    postVenta, 
 };

@@ -5,13 +5,12 @@ const cors = require('cors');
 const clienteRoutes = require('../routes/clienteRoutes');
 const privilegiosRoutes = require('../routes/privilegiosRoutes');
 const permisosRoutes = require('../routes/permisosRoutes');
-const pagoRoutes = require('../routes/pagoRoutes');
 const paqueteRoutes = require('../routes/paqueteRoutes');
 const servicioRoutes = require('../routes/servicioRoutes');
 const tourRoutes = require('../routes/tourRoutes');
 const usuarioRoutes = require('../routes/usuarioRoutes');
 const rolRoutes = require('../routes/rolRoutes');
-const facturaRoutes = require('../routes/facturaRoutes');
+const ventaRoutes = require('../routes/ventaRoutes');
 const guiaRoutes = require('../routes/guiaRoutes');
 
 
@@ -38,13 +37,12 @@ class Server {
         this.app.use('/api/clientes', clienteRoutes);
         this.app.use('/api/privilegios', privilegiosRoutes);
         this.app.use('/api/permisos', permisosRoutes);
-        this.app.use('/api/pagos', pagoRoutes);
         this.app.use('/api/paquetes', paqueteRoutes);
         this.app.use('/api/servicios', servicioRoutes);
         this.app.use('/api/tours', tourRoutes);
         this.app.use('/api/usuarios', usuarioRoutes);
         this.app.use('/api/roles', rolRoutes); 
-        this.app.use('/api/facturas', facturaRoutes)
+        this.app.use('/api/ventas', ventaRoutes);
         this.app.use('/api/guias', guiaRoutes)
 
         this.app.use(errorMiddleware)

@@ -18,6 +18,7 @@ const servicioSchema = new Schema({
         type: String,
         required: [true, 'La categoría del servicio es requerida']
     }
+    //icono:
 });
 
 module.exports = model('Servicio', servicioSchema);

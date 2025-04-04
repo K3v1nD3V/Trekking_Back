@@ -12,14 +12,14 @@ const {
     loginUsuario 
 } = require('../controllers/usuarioController');
 
-router.get('/', authMiddleware(), getUsuarios);
-router.get('/:id', authMiddleware(), getUsuarioById);
-router.post('/', authMiddleware(), createUsuario); // Ruta para crear un nuevo usuario
+router.get('/', authMiddleware(["admin", "empleado"]), getUsuarios);
+router.get('/:id', authMiddleware(["admin", "empleado"]), getUsuarioById);
+router.post('/', createUsuario); // Ruta para crear un nuevo usuario
 
 router.post('/login', loginUsuario);
-router.put('/:id', authMiddleware(['admin']), updateUsuario); // Ruta para actualizar un usuario
+router.put('/:id', updateUsuario); // Ruta para actualizar un usuario
 
-router.delete('/:id', authMiddleware(['admin']), deleteUsuario);
+router.delete('/:id', authMiddleware(["admin", "empleado"]), deleteUsuario);
 
 router.use(errorMiddleware);
 

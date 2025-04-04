@@ -13,11 +13,24 @@ const paqueteSchema = new Schema({
     descripcion: {
         type: String,
         required: [true, 'La descripción del paquete es requerida']
-    }
-    //lugar_encuntro
-    //ubicacion
-    //servicios: []
-    //Multimedia: []
+    },
+    lugar_encuentro:{
+        type: String,
+        required: [true, 'El lugar de encuentro es requerido']
+    },
+    ubicacion: {
+        type: String,
+        required: [true, 'La ubicación es requerida']
+
+    },
+    servicios: [{
+        type: [String], 
+        default: []  
+    }],
+    multimedia: [{
+        type: [String], 
+        default: []  
+    }]
 });
 
 module.exports = model('Paquete', paqueteSchema);

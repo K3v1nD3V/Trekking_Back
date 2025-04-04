@@ -8,9 +8,9 @@ const router = Router();
 
 router.get('/', authMiddleware(), getPermisos);
 router.get('/:id', authMiddleware(), getPermisoById);
-router.post('/', authMiddleware(), validatePermiso, postPermiso);
-router.put('/:id', authMiddleware(['admin']), validatePermiso, putPermiso);
-router.delete('/:id', authMiddleware(['admin']), deletePermiso);
+router.post('/', authMiddleware(["admin", "empleado"]), validatePermiso, postPermiso);
+router.put('/:id', authMiddleware(["admin", "empleado"]), validatePermiso, putPermiso);
+router.delete('/:id', authMiddleware(["admin", "empleado"]), deletePermiso);
 
 router.use(errorMiddleware); 
 

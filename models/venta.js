@@ -1,6 +1,6 @@
 const { model, Schema, Types } = require('mongoose'); 
 
-const facturaSchema = new Schema({
+const ventaSchema = new Schema({
     id_cliente: {
         type: Types.ObjectId,
         ref: 'Cliente', // Referencia a la colección 'Cliente'
@@ -23,4 +23,4 @@ const facturaSchema = new Schema({
 
 
 
-module.exports = model('Factura', facturaSchema, 'factura');
+module.exports = model('Venta', ventaSchema, 'venta');

@@ -1,12 +1,20 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
+const { v2: cloudinary } = require('cloudinary');
+
+// Configuración de Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUND_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 const dbConnect = async () => {
-    //conect to database
     try {
         await mongoose.connect(process.env.MONGO_CNN);
-        console.log('Connect to database');
+        console.log('Connected to database');
     } catch (error) {
         console.log(error);
     }
 }
 
-module.exports = dbConnect;
+module.exports = { dbConnect, cloudinary };

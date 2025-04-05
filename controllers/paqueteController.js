@@ -1,5 +1,8 @@
 const Paquete = require('../models/paquete');
 const Servicio = require('../models/servicio');
+const { cloudinary } = require('../database/config');
+const fs = require('fs');
+const path = require('path');
 
 const getPaquetes = async (req, res) => {
     try {
@@ -36,7 +39,25 @@ const createPaquete = async (req, res) => {
             return res.status(400).json({ message: 'Algunos servicios no existen' });
         }
 
-        const nuevoPaquete = new Paquete(req.body);
+        // Procesar imágenes si existen
+        let imageUrls = [];
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const result = await cloudinary.uploader.upload(file.path, {
+                    folder: 'trekking/paquetes'
+                });
+                imageUrls.push(result.secure_url);
+                // Eliminar archivo temporal
+                fs.unlinkSync(file.path);
+            }
+        }
+
+        const paqueteData = {
+            ...req.body,
+            multimedia: imageUrls
+        };
+
+        const nuevoPaquete = new Paquete(paqueteData);
         const paqueteGuardado = await nuevoPaquete.save();
         
         // Populate servicios en la respuesta
@@ -62,9 +83,27 @@ const updatePaquete = async (req, res) => {
             }
         }
 
+        // Procesar nuevas imágenes si existen
+        let imageUrls = [];
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const result = await cloudinary.uploader.upload(file.path, {
+                    folder: 'trekking/paquetes'
+                });
+                imageUrls.push(result.secure_url);
+                // Eliminar archivo temporal
+                fs.unlinkSync(file.path);
+            }
+        }
+
+        const updateData = {
+            ...req.body,
+            ...(imageUrls.length > 0 && { multimedia: imageUrls })
+        };
+
         const paqueteActualizado = await Paquete.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            updateData,
             { new: true }
         ).populate('servicios', 'nombre descripcion estado');
 

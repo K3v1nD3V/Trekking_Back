@@ -9,8 +9,7 @@ const authMiddleware = (requiredPermissions = []) => {
         
         try {
             const verified = jwt.verify(token, process.env.JWT_SECRET); // Usar el secreto desde .env
-            req.user = verified;
-            
+            req.user = verified; 
             // Verificar permisos si se requieren
             if (requiredPermissions.length > 0 && !requiredPermissions.includes(req.user.role)) {
                 return res.status(403).json({ message: 'No tienes permisos para acceder a esta ruta.' });

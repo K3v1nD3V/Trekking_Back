@@ -6,11 +6,11 @@ const errorMiddleware = require('../middlewares/errorMiddleware'); // Línea añ
 
 const router = Router();
 
-router.get('/', authMiddleware(), getPermisos);
-router.get('/:id', authMiddleware(), getPermisoById);
-router.post('/', authMiddleware(), validatePermiso, postPermiso);
-router.put('/:id', authMiddleware(['admin']), validatePermiso, putPermiso);
-router.delete('/:id', authMiddleware(['admin']), deletePermiso);
+router.get('/', authMiddleware(["admin", "empleado"]), getPermisos);
+router.get('/:id', authMiddleware(["admin", "empleado"]), getPermisoById);
+// router.post('/', authMiddleware(["admin", "empleado"]), validatePermiso, postPermiso);
+// router.put('/:id', authMiddleware(["admin", "empleado"]), validatePermiso, putPermiso);
+// router.delete('/:id', authMiddleware(["admin", "empleado"]), deletePermiso);
 
 router.use(errorMiddleware); 
 

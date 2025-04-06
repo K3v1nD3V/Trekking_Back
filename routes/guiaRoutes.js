@@ -20,11 +20,11 @@ const {
 
 } = require('../middlewares/guiaMiddleware'); 
 
-router.get('/', authMiddleware(), validate, getGuias);
-router.get('/:id', authMiddleware(), getGuiaByIdValidation, validate, getGuiaById);
-router.post('/', authMiddleware(), guiaBaseValidation, validate, postGuia);
-router.put('/:id',authMiddleware(), updateGuiaValidation, validate, putGuia);
-router.delete('/:id', authMiddleware(), deleteGuiaValidation, validate, deleteGuia);
+router.get('/', authMiddleware(["admin"]), validate, getGuias);
+router.get('/:id', authMiddleware(["admin"]), getGuiaByIdValidation, validate, getGuiaById);
+router.post('/', authMiddleware(["admin"]), guiaBaseValidation, validate, postGuia);
+router.put('/:id',authMiddleware(["admin"]), updateGuiaValidation, validate, putGuia);
+router.delete('/:id', authMiddleware(["admin"]), deleteGuiaValidation, validate, deleteGuia);
 
 router.use(errorMiddleware);
 

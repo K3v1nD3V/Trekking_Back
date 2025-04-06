@@ -13,6 +13,7 @@ const servicioSchema = new Schema({
         type: Boolean,
         default: true
     }
+    //icono:
 });
 
 module.exports = model('Servicio', servicioSchema);

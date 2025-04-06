@@ -1,6 +1,6 @@
 const { body, param, validationResult } = require('express-validator');
 
-const facturaBaseValidation = [
+const ventaBaseValidation = [
     body('id_cliente')
         .isMongoId().withMessage('El ID del cliente no es válido'),
     body('id_paquete')
@@ -17,12 +17,12 @@ const facturaBaseValidation = [
         .isNumeric().withMessage('El valor debe ser un número')    
 ];
 
-const postFacturaValidation = [
-    ...facturaBaseValidation 
+const postVentaValidation = [
+    ...ventaBaseValidation 
 ]
 
-const getFacturaByIdValidation = [
-    param('id').isMongoId().withMessage('El ID de la factura no es válido')
+const getVentaByIdValidation = [
+    param('id').isMongoId().withMessage('El ID de la venta no es válido')
 ]
 
 
@@ -35,9 +35,9 @@ const validate = (req, res, next) => {
 };
 
 module.exports = {
-    postFacturaValidation,
-    facturaBaseValidation,
-    getFacturaByIdValidation,
+    postVentaValidation,
+    ventaBaseValidation,
+    getVentaByIdValidation,
     validate
 };
 

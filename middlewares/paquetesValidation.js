@@ -42,6 +42,7 @@ const validatePaquete = [
             });
             return true;
         })
+
 ];
 
 module.exports = validatePaquete;

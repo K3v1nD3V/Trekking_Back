@@ -19,11 +19,11 @@ const {
     validate
 } = require('../middlewares/servicioMiddleware');
 
-router.get('/', authMiddleware(),getServicios);
-router.get('/:id',authMiddleware(), getServicioByIdValidation, validate, getServicioById);
-router.post('/',authMiddleware(), postServicioValidation, validate, createServicio);
-router.put('/:id',authMiddleware(), updateServicioValidation, validate, updateServicio);
-router.delete('/:id',authMiddleware(), deleteServicioValidation, validate, deleteServicio);
+router.get('/', authMiddleware(["admin", "empleado", "cliente"]),getServicios);
+router.get('/:id',authMiddleware(["admin", "empleado", "cliente"]), getServicioByIdValidation, validate, getServicioById);
+router.post('/',authMiddleware(["admin", "empleado"]), postServicioValidation, validate, createServicio);
+router.put('/:id',authMiddleware(["admin", "empleado"]), updateServicioValidation, validate, updateServicio);
+router.delete('/:id',authMiddleware(["admin", "empleado"]), deleteServicioValidation, validate, deleteServicio);
 
 router.use(errorMiddleware);
 

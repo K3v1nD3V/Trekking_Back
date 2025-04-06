@@ -1,4 +1,4 @@
-const dbConnect = require('../database/config');
+const { dbConnect } = require('../database/config');
 const express = require('express');
 const cors = require('cors');
 
@@ -11,8 +11,6 @@ const tourRoutes = require('../routes/tourRoutes');
 const usuarioRoutes = require('../routes/usuarioRoutes');
 const rolRoutes = require('../routes/rolRoutes');
 const ventaRoutes = require('../routes/ventaRoutes');
-const guiaRoutes = require('../routes/guiaRoutes');
-
 
 const errorMiddleware = require('../middlewares/errorMiddleware')
 class Server {
@@ -43,7 +41,6 @@ class Server {
         this.app.use('/api/usuarios', usuarioRoutes);
         this.app.use('/api/roles', rolRoutes); 
         this.app.use('/api/ventas', ventaRoutes);
-        this.app.use('/api/guias', guiaRoutes)
 
         this.app.use(errorMiddleware)
     }

@@ -1,6 +1,6 @@
 const Usuario = require('../models/usuario');
 const Rol = require('../models/rol');
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); 
 
 const getUsuarios = async (req, res) => {

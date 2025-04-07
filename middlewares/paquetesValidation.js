@@ -26,20 +26,19 @@ const validatePaquete = [
             if (servicios.length === 0) {
                 throw new Error('Debe incluir al menos un servicio');
             }
-            return true;
-        }),
-        
-    check('multimedia')
-        .isArray().withMessage('Multimedia debe ser un array de URLs')
-        .custom(multimedia => {
-            if (multimedia.length === 0) {
-                throw new Error('Debe incluir al menos un elemento multimedia');
-            }
-            multimedia.forEach(url => {
-                if (!/^https?:\/\/.+\..+/.test(url)) {
-                    throw new Error(`La URL ${url} no es válida`);
+            servicios.forEach(id => {
+                if (!/^[a-fA-F0-9]{24}$/.test(id)) { // Verifica que sea un ObjectId válido (MongoDB)
+                throw new Error(`El ID de servicio "${id}" no es válido.`);
                 }
             });
+            return true;
+        }), 
+        
+    check('multimedia')
+        .custom((_, { req }) => {
+            if (!req.files && (!req.body.multimedia || req.body.multimedia.length === 0)) {
+                throw new Error('Debe incluir al menos un archivo multimedia.');
+            }
             return true;
         })
 

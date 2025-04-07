@@ -1,31 +1,39 @@
 const multer = require('multer');
-const path = require('path');
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-// Configuración de almacenamiento temporal
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
+// Configura Cloudinary con tus credenciales
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME, // Define estas variables en tu archivo .env
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Filtro para aceptar imágenes y videos
+// Configura almacenamiento en Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'trekking/paquetes', // Carpeta en Cloudinary donde se guardarán los archivos
+    allowed_formats: ['jpg', 'jpeg', 'png', 'mp4', 'webm'], // Formatos permitidos
+  },
+});
+
+// Filtro para aceptar solo imágenes y videos
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
-        cb(null, true);
-    } else {
-        cb(new Error('Solo se permiten archivos de imagen o video'), false);
-    }
+  if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Solo se permiten archivos de imagen o video'), false);
+  }
 };
 
-const upload = multer({ 
-    storage: storage,
-    fileFilter: fileFilter,
-    limits: {
-        fileSize: 50 * 1024 * 1024 // 50MB (para permitir videos)
-    }
+// Configura Multer para usar Cloudinary
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB máximo
+  },
 });
 
 module.exports = upload;

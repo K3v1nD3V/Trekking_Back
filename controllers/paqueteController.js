@@ -29,46 +29,41 @@ const getPaqueteById = async (req, res) => {
 };
 
 const createPaquete = async (req, res) => {
-    console.log('Archivos subidos:', req.files);
-    console.log('Body recibido:', req.body);
-    console.log('Archivos recibidos:', req.files);
     try {
+      console.log('Archivos subidos a Cloudinary:', req.files);
+      console.log('Body recibido:', req.body);
+  
       // Verificar que los servicios existan
       const serviciosExistentes = await Servicio.find({
-        _id: { $in: req.body.servicios }
+        _id: { $in: req.body.servicios },
       });
   
       if (serviciosExistentes.length !== req.body.servicios.length) {
         return res.status(400).json({ message: 'Algunos servicios no existen' });
       }
   
-      // Procesar imágenes si existen
-      let imageUrls = [];
-      if (req.files && req.files.length > 0) {
-        for (const file of req.files) {
-          const result = await cloudinary.uploader.upload(file.path, {
-            folder: 'trekking/paquetes'
-          });
-          imageUrls.push(result.secure_url);
-          // Eliminar archivo temporal
-          fs.unlinkSync(file.path);
-        }
-      }
+      // Obtener las URLs de Cloudinary desde req.files
+      const imageUrls = req.files.map(file => file.path); // Las URLs estarán disponibles en "path"
   
+      // Construir los datos del paquete
       const paqueteData = {
         ...req.body,
-        multimedia: imageUrls // Carga las URLs generadas por Cloudinary
+        multimedia: imageUrls, // Usa las URLs proporcionadas por Cloudinary
       };
   
+      // Guardar el paquete en la base de datos
       const nuevoPaquete = new Paquete(paqueteData);
       const paqueteGuardado = await nuevoPaquete.save();
   
-      // Populate servicios en la respuesta
-      const paqueteConServicios = await Paquete.findById(paqueteGuardado._id)
-        .populate('servicios', 'nombre descripcion estado');
+      // Populate para incluir información completa de los servicios
+      const paqueteConServicios = await Paquete.findById(paqueteGuardado._id).populate(
+        'servicios',
+        'nombre descripcion estado'
+      );
   
       res.status(201).json(paqueteConServicios);
     } catch (error) {
+      console.error('Error al crear paquete:', error.message);
       res.status(400).json({ message: error.message });
     }
   };

@@ -24,8 +24,8 @@ const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 50 * 1024 * 1024 // 50MB (para permitir videos)
-    }
-});
-
-module.exports = upload;
+      fileSize: 50 * 1024 * 1024, // 50MB para videos
+    },
+  }).array('images', 5); // Asegúrate de que el campo sea `images`
+  
+  module.exports = upload;

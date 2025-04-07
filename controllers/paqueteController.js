@@ -29,6 +29,9 @@ const getPaqueteById = async (req, res) => {
 };
 
 const createPaquete = async (req, res) => {
+    console.log('Archivos subidos:', req.files);
+    console.log('Body recibido:', req.body);
+    console.log('Archivos recibidos:', req.files);
     try {
       // Verificar que los servicios existan
       const serviciosExistentes = await Servicio.find({

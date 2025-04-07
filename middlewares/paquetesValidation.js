@@ -29,7 +29,7 @@ const validatePaquete = [
             return true;
         }),
         
-    check('Multimedia')
+    check('multimedia')
         .isArray().withMessage('Multimedia debe ser un array de URLs')
         .custom(multimedia => {
             if (multimedia.length === 0) {

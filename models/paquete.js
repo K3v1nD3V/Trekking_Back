@@ -18,7 +18,7 @@ const paqueteSchema = new Schema({
         type: String,
         required: [true, 'El lugar de encuentro es requerido']
     },
-    ubicacion: {
+    destino: {
         type: String,
         required: [true, 'La ubicación es requerida']
 

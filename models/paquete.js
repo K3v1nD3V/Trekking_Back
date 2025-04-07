@@ -24,11 +24,11 @@ const paqueteSchema = new Schema({
 
     },
     servicios: [{
-        type: [String], 
+        type: String, 
         default: []  
     }],
     multimedia: [{
-        type: [String], 
+        type: String, 
         default: []  
 }]
 });

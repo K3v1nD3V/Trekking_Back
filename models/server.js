@@ -29,11 +29,21 @@ class Server {
 
     route() {
         this.app.use(express.json());
-        this.app.use(cors({
-            origin: 'https://trekking-back.onrender.com', // Permite solo este origen
-            methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
-            allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitido
-        }));
+
+        const corsOptions = {
+            origin: function (origin, callback) {
+              const allowedOrigins = ['http://localhost:5173', 'https://trekking-back.onrender.com'];
+              if (allowedOrigins.includes(origin) || !origin) {
+                callback(null, true); // Permite el origen
+              } else {
+                callback(new Error('Origen no permitido por la política CORS')); // Bloquea el origen
+              }
+            },
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+            allowedHeaders: ['Content-Type', 'Authorization'],
+          };
+          
+        this.app.use(cors(corsOptions));
         
         // Rutas
         this.app.use('/api/clientes', clienteRoutes);

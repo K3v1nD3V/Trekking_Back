@@ -10,7 +10,8 @@ const cors = require('cors');
 
 var corsOption = {
     origin: 'https://trekking-back.onrender.com',
-    optionsSuccessStatus: 200
+    headers: ["Content-Type"],
+    credentials: true,
 }
 const router = express.Router();
 

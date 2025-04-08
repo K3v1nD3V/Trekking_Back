@@ -12,14 +12,14 @@ router.get('/', authMiddleware(["admin", "empleado", "cliente"]), validatePaquet
 router.get('/:id', authMiddleware(["admin", "empleado", "cliente"]), validatePaquete, getPaqueteById);
 router.post('/', 
     authMiddleware(["admin", "empleado"]), 
-    upload.array('images', 5), // Máximo 5 imágenes
+    upload.array('images', 5), 
     validatePaquete,
     validate, 
     createPaquete
 );
 router.put('/:id', 
     authMiddleware(["admin", "empleado"]), 
-    upload.array('images', 5), // Máximo 5 imágenes
+    upload.array('images', 5), 
     validatePaquete,
     validate, 
     updatePaquete

@@ -30,11 +30,12 @@ class Server {
     route() {
         this.app.use(express.json());
         
-        this.app.use(cors({
-            origin: 'http://localhost:5173', // Permite solo este origen
-            methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
-            allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitido
-        }));
+        this.app.use(cors());
+        // this.app.use(cors({
+        //     origin: 'http://localhost:5173', // Permite solo este origen
+        //     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+        //     allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitido
+        // }));
         
         // Rutas
         this.app.use('/api/clientes', clienteRoutes);

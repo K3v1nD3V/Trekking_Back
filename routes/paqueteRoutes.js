@@ -6,19 +6,11 @@ const errorMiddleware = require('../middlewares/errorMiddleware');
 const validate = require('../middlewares/validationMiddleware'); 
 const upload = require('../middlewares/uploadMiddleware');
 
-const cors = require('cors');
-
-var corsOption = {
-    origin: 'https://trekking-back.onrender.com',
-    headers: ["Content-Type"],
-    credentials: true,
-}
 const router = express.Router();
 
 router.get('/', authMiddleware(["admin", "empleado", "cliente"]), validatePaquete, getPaquetes);
 router.get('/:id', authMiddleware(["admin", "empleado", "cliente"]), validatePaquete, getPaqueteById);
 router.post('/', 
-    cors(corsOption),
     authMiddleware(["admin", "empleado"]), 
     upload.array('images', 5), // Máximo 5 imágenes
     validatePaquete,

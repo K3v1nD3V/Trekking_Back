@@ -29,7 +29,11 @@ class Server {
 
     route() {
         this.app.use(express.json());
-        this.app.use(cors());
+        this.app.use(cors({
+            origin: 'https://trekking-back.onrender.com', // Permite solo este origen
+            methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+            allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitido
+        }));
         
         // Rutas
         this.app.use('/api/clientes', clienteRoutes);

@@ -34,8 +34,9 @@ class Server {
             origin: ['http://localhost:5173', 'https://trekking-back.onrender.com'], // Permite múltiples orígenes
             methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
             allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
-          };
-          app.use(cors(corsOptions));
+        };
+        
+        this.app.use(cors(corsOptions));
           
         // this.app.use(cors({
         //     origin: 'http://localhost:5173', // Permite solo este origen

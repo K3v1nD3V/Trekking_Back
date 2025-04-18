@@ -3,10 +3,10 @@ const { v2: cloudinary } = require('cloudinary');
 
 // Configuración de Cloudinary
 cloudinary.config({
-    cloud_name: process.env.CLOUND_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
+    cloud_name: process.env.CLOUD_NAME, 
+    api_key: process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 
 const dbConnect = async () => {
     try {

@@ -30,9 +30,10 @@ const getPaqueteById = async (req, res) => {
 
 const createPaquete = async (req, res) => {
     try {
-      console.log('Archivos subidos a Cloudinary:', req.files);
-      console.log('Body recibido:', req.body);
-  
+        console.log('Encabezados recibidos:', req.headers);
+        console.log('Body recibido:', req.body);
+        console.log('Archivos recibidos:', req.files);
+
       // Verificar que los servicios existan
       const serviciosExistentes = await Servicio.find({
         _id: { $in: req.body.servicios },

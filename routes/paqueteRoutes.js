@@ -13,8 +13,8 @@ router.get('/:id', authMiddleware(["admin","cliente"]), validatePaquete, getPaqu
 router.post('/', 
     authMiddleware(["admin"]), 
     upload.array('images', 5), 
-    validatePaquete,
-    validate, 
+    // validatePaquete,
+    // validate, 
     createPaquete
 );
 router.put('/:id', 

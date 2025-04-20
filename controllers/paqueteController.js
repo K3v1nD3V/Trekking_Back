@@ -70,49 +70,57 @@ const createPaquete = async (req, res) => {
   };
 
 const updatePaquete = async (req, res) => {
-    try {
-        // Verificar servicios si se están actualizando
-        if (req.body.servicios) {
-            const serviciosExistentes = await Servicio.find({
-                _id: { $in: req.body.servicios }
-            });
+  try {
+    const serviciosExistentes = await Servicio.find({
+      _id: { $in: req.body.servicios },
+    });
 
-            if (serviciosExistentes.length !== req.body.servicios.length) {
-                return res.status(400).json({ message: 'Algunos servicios no existen' });
-            }
-        }
-
-        // Procesar nuevas imágenes si existen
-        let imageUrls = [];
-        if (req.files && req.files.length > 0) {
-            for (const file of req.files) {
-                const result = await cloudinary.uploader.upload(file.path, {
-                    folder: 'trekking/paquetes'
-                });
-                imageUrls.push(result.secure_url);
-                // Eliminar archivo temporal
-                fs.unlinkSync(file.path);
-            }
-        }
-
-        const updateData = {
-            ...req.body,
-            ...(imageUrls.length > 0 && { multimedia: imageUrls })
-        };
-
-        const paqueteActualizado = await Paquete.findByIdAndUpdate(
-            req.params.id,
-            updateData,
-            { new: true }
-        ).populate('servicios', 'nombre descripcion estado');
-
-        if (!paqueteActualizado) {
-            return res.status(404).json({ message: 'Paquete no encontrado' });
-        }
-        res.json(paqueteActualizado);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    if (serviciosExistentes.length !== req.body.servicios.length) {
+      return res.status(400).json({ message: 'Algunos servicios no existen' });
     }
+
+    const imageUrls = req.body.multimedia || [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: 'trekking/paquetes',
+        });
+        imageUrls.push(result.secure_url);
+      }
+    }
+
+    // Eliminar archivos antiguos si no están en la nueva lista
+    const paqueteActual = await Paquete.findById(req.params.id);
+    if (paqueteActual) {
+      const archivosAEliminar = paqueteActual.multimedia.filter(
+        (url) => !imageUrls.includes(url)
+      );
+
+      for (const archivo of archivosAEliminar) {
+        const publicId = archivo.split('/').pop().split('.')[0]; // Extraer el public_id de la URL
+        await cloudinary.uploader.destroy(`trekking/paquetes/${publicId}`);
+      }
+    }
+
+    const updateData = {
+      ...req.body,
+      multimedia: imageUrls,
+    };
+
+    const paqueteActualizado = await Paquete.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    ).populate('servicios', 'nombre descripcion estado');
+
+    if (!paqueteActualizado) {
+      return res.status(404).json({ message: 'Paquete no encontrado' });
+    }
+    res.json(paqueteActualizado);
+  } catch (error) {
+    console.error('Error al actualizar paquete:', error.message);
+    res.status(500).json({ message: 'Error interno al actualizar el paquete.' });
+  }
 };
 
 const deletePaquete = async (req, res) => {

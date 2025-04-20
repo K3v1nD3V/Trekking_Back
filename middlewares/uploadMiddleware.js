@@ -20,10 +20,12 @@ const storage = new CloudinaryStorage({
 
 // Filtro para aceptar solo imágenes y videos
 const fileFilter = (req, file, cb) => {
+  console.log('Procesando archivo:', file.originalname, file.mimetype);
   if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
-    cb(null, true);
+      cb(null, true);
   } else {
-    cb(new Error('Solo se permiten archivos de imagen o video'), false);
+      console.error('Formato no válido:', file.originalname, file.mimetype);
+      cb(new Error('Solo se permiten archivos de imagen o video'), false);
   }
 };
 

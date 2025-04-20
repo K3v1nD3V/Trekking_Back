@@ -45,4 +45,3 @@ const validatePaquete = [
 ];
 
 module.exports = validatePaquete;
-   

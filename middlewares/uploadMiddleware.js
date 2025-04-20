@@ -14,7 +14,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'trekking/paquetes', // Carpeta en Cloudinary donde se guardarán los archivos
-    allowed_formats: ['jpg', 'jpeg', 'png', 'mp4', 'webm'], // Formatos permitidos
+    allowed_formats: ['jpg', 'jpeg', 'png', 'mp4', 'webm', 'webp'], // Formatos permitidos
   },
 });
 

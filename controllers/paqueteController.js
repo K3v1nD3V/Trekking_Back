@@ -142,13 +142,24 @@ const updatePaquete = async (req, res) => {
 
 const deletePaquete = async (req, res) => {
     try {
-        const paqueteEliminado = await Paquete.findByIdAndDelete(req.params.id);
-        if (!paqueteEliminado) {
+        const paquete = await Paquete.findById(req.params.id);
+        if (!paquete) {
             return res.status(404).json({ message: 'Paquete no encontrado' });
         }
+
+        // Eliminar archivos multimedia de Cloudinary
+        for (const url of paquete.multimedia) {
+            const publicId = url.split('/').pop().split('.')[0]; // Extraer el public_id de la URL
+            await cloudinary.uploader.destroy(`trekking/paquetes/${publicId}`);
+        }
+
+        // Eliminar el paquete de la base de datos
+        await Paquete.findByIdAndDelete(req.params.id);
+
         res.json({ message: 'Paquete eliminado correctamente' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error al eliminar paquete:', error.message);
+        res.status(500).json({ message: 'Error interno al eliminar el paquete.' });
     }
 };
 

@@ -71,6 +71,7 @@ const createPaquete = async (req, res) => {
 
 const updatePaquete = async (req, res) => {
   try {
+    // Verificar que los servicios existan
     const serviciosExistentes = await Servicio.find({
       _id: { $in: req.body.servicios },
     });
@@ -79,43 +80,59 @@ const updatePaquete = async (req, res) => {
       return res.status(400).json({ message: 'Algunos servicios no existen' });
     }
 
-    const imageUrls = req.body.multimedia || [];
+    // Obtener el paquete actual de la base de datos
+    const paqueteActual = await Paquete.findById(req.params.id);
+    if (!paqueteActual) {
+      return res.status(404).json({ message: 'Paquete no encontrado' });
+    }
+
+    // Inicializar el array de multimedia con las rutas existentes
+    let imageUrls = [...paqueteActual.multimedia];
+
+    // Procesar nuevos archivos subidos
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
         const result = await cloudinary.uploader.upload(file.path, {
           folder: 'trekking/paquetes',
         });
-        imageUrls.push(result.secure_url);
+        imageUrls.push(result.secure_url); // Añadir nuevas URLs al array
       }
     }
 
-    // Eliminar archivos antiguos si no están en la nueva lista
-    const paqueteActual = await Paquete.findById(req.params.id);
-    if (paqueteActual) {
+    // Eliminar archivos antiguos si no están en la nueva lista enviada por el cliente
+    if (req.body.multimedia) {
+      const multimediaEnviada = Array.isArray(req.body.multimedia)
+        ? req.body.multimedia
+        : [req.body.multimedia];
+
       const archivosAEliminar = paqueteActual.multimedia.filter(
-        (url) => !imageUrls.includes(url)
+        (url) => !multimediaEnviada.includes(url)
       );
 
       for (const archivo of archivosAEliminar) {
         const publicId = archivo.split('/').pop().split('.')[0]; // Extraer el public_id de la URL
         await cloudinary.uploader.destroy(`trekking/paquetes/${publicId}`);
       }
+
+      // Actualizar el array de multimedia con las rutas enviadas por el cliente
+      imageUrls = multimediaEnviada.concat(
+        imageUrls.filter((url) => !multimediaEnviada.includes(url))
+      );
     }
 
+    // Construir los datos actualizados
     const updateData = {
       ...req.body,
       multimedia: imageUrls,
     };
 
+    // Actualizar el paquete en la base de datos
     const paqueteActualizado = await Paquete.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true }
     ).populate('servicios', 'nombre descripcion estado');
 
-    if (!paqueteActualizado) {
-      return res.status(404).json({ message: 'Paquete no encontrado' });
-    }
     res.json(paqueteActualizado);
   } catch (error) {
     console.error('Error al actualizar paquete:', error.message);

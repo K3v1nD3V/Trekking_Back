@@ -10,8 +10,8 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const validate = require('../middlewares/validationMiddleware'); 
 
 
-router.get('/', authMiddleware(["admin"]), ventaBaseValidation, validate, getVentas);
-router.get('/:id', authMiddleware(["admin"]), ventaBaseValidation, validate, getVentaById);
+router.get('/', authMiddleware(["admin"]), validate, getVentas);
+router.get('/:id', authMiddleware(["admin"]), validate, getVentaById);
 router.post('/', authMiddleware(["admin"]), ventaBaseValidation, validate, postVenta);
 // router.get('/', authMiddleware(['admin']),facturaBaseValidation, validate, getFacturas);
 // router.get('/:id', authMiddleware(['admin']), facturaBaseValidation, validate, getFacturaById);

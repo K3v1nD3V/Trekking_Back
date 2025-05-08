@@ -1,13 +1,9 @@
 const { model, Schema } = require('mongoose');
 
 const tourSchema = new Schema({
-    fecha: {
+    fechaHora: {
         type: Date,
-        required: [true, 'La fecha es requerida']
-    },
-    Horas: {
-        type: Date,
-        required: [true, 'La fecha de fin es requerida']
+        required: [true, 'La fecha y hora son requeridas']
     },
     id_paquete: {
         type: Schema.Types.ObjectId,

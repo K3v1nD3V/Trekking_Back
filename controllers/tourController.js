@@ -24,16 +24,15 @@ const getTourById = async (req, res) => {
 
 const createTour = async (req, res) => {
     try {
-        const { fecha_inicio, fecha_fin, id_paquete } = req.body;
-        
+        const { fechaHora, id_paquete } = req.body; // Cambiar a `fechaHora`
+
         const paqueteExists = await Paquete.findById(id_paquete);
         if (!paqueteExists) {
             return res.status(400).json({ message: 'El paquete especificado no existe' });
         }
 
         const newTour = new Tour({
-            fecha_inicio: new Date(fecha_inicio),
-            fecha_fin: new Date(fecha_fin),
+            fechaHora: new Date(fechaHora), // Usar `fechaHora` directamente
             id_paquete
         });
 
@@ -46,33 +45,35 @@ const createTour = async (req, res) => {
 
 const updateTour = async (req, res) => {
     try {
-        const { fecha_inicio, fecha_fin, id_paquete } = req.body;
-        
-        if (id_paquete) {
-            const paqueteExists = await Paquete.findById(id_paquete);
-            if (!paqueteExists) {
-                return res.status(400).json({ message: 'El paquete especificado no existe' });
-            }
+      const { fechaHora, id_paquete } = req.body; // Extrae los datos del cuerpo de la solicitud
+  
+      // Verifica si el paquete existe
+      if (id_paquete) {
+        const paqueteExists = await Paquete.findById(id_paquete);
+        if (!paqueteExists) {
+          return res.status(400).json({ message: 'El paquete especificado no existe' });
         }
-
-        const updatedTour = await Tour.findByIdAndUpdate(
-            req.params.id,
-            {
-                fecha_inicio: fecha_inicio ? new Date(fecha_inicio) : undefined,
-                fecha_fin: fecha_fin ? new Date(fecha_fin) : undefined,
-                id_paquete
-            },
-            { new: true }
-        ).populate('id_paquete');
-
-        if (!updatedTour) {
-            return res.status(404).json({ message: 'Tour no encontrado' });
-        }
-        res.json(updatedTour);
+      }
+  
+      // Actualiza el tour
+      const updatedTour = await Tour.findByIdAndUpdate(
+        req.params.id,
+        {
+          fechaHora: fechaHora ? new Date(fechaHora) : undefined, // Convierte a formato de fecha si está presente
+          id_paquete
+        },
+        { new: true, runValidators: true } // Devuelve el documento actualizado y aplica validaciones
+      ).populate('id_paquete'); // Popula el campo `id_paquete`
+  
+      if (!updatedTour) {
+        return res.status(404).json({ message: 'Tour no encontrado' });
+      }
+  
+      res.json(updatedTour); // Devuelve el tour actualizado
     } catch (error) {
-        res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error.message });
     }
-};
+  };
 
 const deleteTour = async (req, res) => {
     try {

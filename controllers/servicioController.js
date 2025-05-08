@@ -23,12 +23,13 @@ const getServicioById = async (req, res) => {
 
 const createServicio = async (req, res) => {
     try {
-        const { nombre, descripcion, estado } = req.body;
+        const { nombre, descripcion, estado, icono } = req.body;
 
         const nuevoServicio = new Servicio({
             nombre,
             descripcion,
-            estado: estado ?? true
+            estado: estado ?? true,
+            icono
         });
 
         const servicioGuardado = await nuevoServicio.save();
@@ -47,10 +48,11 @@ const updateServicio = async (req, res) => {
             return res.status(404).json({ message: 'Servicio no encontrado' });
         }
 
-        const { nombre, descripcion, estado } = req.body;
+        const { nombre, descripcion, estado, icono } = req.body;
         servicioExistente.nombre = nombre ?? servicioExistente.nombre;
         servicioExistente.descripcion = descripcion ?? servicioExistente.descripcion;
         servicioExistente.estado = estado ?? servicioExistente.estado;
+        servicioExistente.icono = icono ?? servicioExistente.icono;
 
         const servicioActualizado = await servicioExistente.save();
         res.json(servicioActualizado);

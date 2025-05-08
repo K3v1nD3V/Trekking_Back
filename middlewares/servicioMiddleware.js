@@ -3,14 +3,16 @@ const { body, param, validationResult } = require('express-validator');
 const postServicioValidation = [
     body('nombre').notEmpty().withMessage('El nombre del servicio es requerido'),
     body('descripcion').notEmpty().withMessage('La descripción es requerida'),
-    body('estado').optional().isBoolean().withMessage('El estado debe ser un booleano')
+    body('estado').optional().isBoolean().withMessage('El estado debe ser un booleano'),
+    body('icono').notEmpty().withMessage('El icono es requerido')
 ];
 
 const updateServicioValidation = [
     param('id').isMongoId().withMessage('El ID del servicio no es válido'),
     body('nombre').optional().notEmpty().withMessage('El nombre del servicio es requerido'),
     body('descripcion').optional().notEmpty().withMessage('La descripción es requerida'),
-    body('estado').optional().isBoolean().withMessage('El estado debe ser un booleano')
+    body('estado').optional().isBoolean().withMessage('El estado debe ser un booleano'),
+    body('icono').optional().notEmpty().withMessage('El icono es requerido')
 ];
 
 const deleteServicioValidation = [

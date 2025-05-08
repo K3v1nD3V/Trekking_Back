@@ -12,8 +12,11 @@ const servicioSchema = new Schema({
     estado: {
         type: Boolean,
         default: true
+    },
+    icono: {
+        type: String,
+        required: [true, 'El icono es requerido']
     }
-    //icono:
 });
 
 module.exports = model('Servicio', servicioSchema);

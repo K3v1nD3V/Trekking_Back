@@ -7,8 +7,8 @@ const validate = require('../middlewares/validationMiddleware');
 
 const router = express.Router();
 
-router.get('/', authMiddleware(["admin"]),validateTour, getTours);
-router.get('/:id',authMiddleware(["admin"]), validateTour, getTourById);
+router.get('/', getTours);
+router.get('/:id', getTourById);
 router.post('/', authMiddleware(["admin"]),validateTour, validate, createTour);
 router.put('/:id', authMiddleware(["admin"]),validateTour,validate, updateTour);
 router.delete('/:id',authMiddleware(["admin"]), validateTour, deleteTour);

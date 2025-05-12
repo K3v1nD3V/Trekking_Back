@@ -8,8 +8,8 @@ const upload = require('../middlewares/uploadMiddleware');
 
 const router = express.Router();
 
-router.get('/', authMiddleware(["admin", "cliente"]), getPaquetes); 
-router.get('/:id', authMiddleware(["admin", "cliente"]), getPaqueteById); 
+router.get('/', getPaquetes); 
+router.get('/:id', getPaqueteById); 
 router.post(
     '/',
     authMiddleware(["admin"]),

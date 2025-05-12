@@ -19,8 +19,8 @@ const {
     validate
 } = require('../middlewares/servicioMiddleware');
 
-router.get('/', authMiddleware(["admin","cliente"]),getServicios);
-router.get('/:id',authMiddleware(["admin","cliente"]), getServicioByIdValidation, validate, getServicioById);
+router.get('/', getServicios);
+router.get('/:id', getServicioByIdValidation, validate, getServicioById);
 router.post('/',authMiddleware(["admin"]), postServicioValidation, validate, createServicio);
 router.put('/:id',authMiddleware(["admin"]), updateServicioValidation, validate, updateServicio);
 router.delete('/:id',authMiddleware(["admin"]), deleteServicioValidation, validate, deleteServicio);

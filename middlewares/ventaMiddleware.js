@@ -14,7 +14,9 @@ const ventaBaseValidation = [
             return true;
         }),    
     body('valor')
-        .isNumeric().withMessage('El valor debe ser un número')    
+        .isNumeric().withMessage('El valor debe ser un número'),
+     body('estado')
+        .isBoolean().withMessage('El estado debe ser un booleano')    
 ];
 
 const postVentaValidation = [

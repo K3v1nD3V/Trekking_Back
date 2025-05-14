@@ -18,6 +18,10 @@ const ventaSchema = new Schema({
     fecha: {
         type: Date,
         required: [true, 'La fecha es requerida']
+    },
+    estado: {
+        type: Boolean,
+        default: true
     }
 });
 

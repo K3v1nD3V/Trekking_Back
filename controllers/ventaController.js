@@ -34,7 +34,7 @@ const postVenta = async (req, res) => {
               return res.status(400).json({errors: errors.array()})
           }
     try {
-        const { id_cliente, id_paquete, valor, fecha } = req.body;
+        const { id_cliente, id_paquete, valor, fecha, estado } = req.body;
 
         // Validar existencia del cliente
         const clienteExists = await Cliente.findById(id_cliente);
@@ -53,7 +53,8 @@ const postVenta = async (req, res) => {
             id_cliente,
             id_paquete,
             valor,
-            fecha: new Date(fecha)
+            fecha: new Date(fecha),
+            estado
         });
 
         // Guardar y devolver la venta con datos completos

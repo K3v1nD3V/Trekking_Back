@@ -9,7 +9,9 @@ const {
     createUsuario,
     updateUsuario,
     deleteUsuario,
-    loginUsuario 
+    loginUsuario,
+    recuperarContraseña,
+    cambiarContraseña
 } = require('../controllers/usuarioController');
 
 router.get('/', authMiddleware(["admin"]), getUsuarios);
@@ -20,6 +22,8 @@ router.post('/login', loginUsuario);
 router.put('/:id', updateUsuario); // Ruta para actualizar un usuario
 
 router.delete('/:id', authMiddleware(["admin"]), deleteUsuario);
+router.post('/recuperar', recuperarContraseña);
+router.post('/cambiar-contrasena', cambiarContraseña);
 
 router.use(errorMiddleware);
 

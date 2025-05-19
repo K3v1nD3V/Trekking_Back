@@ -15,6 +15,9 @@ const clienteBaseValidation = [
     body('telefono')
         .notEmpty().withMessage('El teléfono del cliente es requerido')
         .matches(/^\d+$/).withMessage('El teléfono debe contener solo números'),
+    body('observacion_medica')
+        .optional()
+        .isString().withMessage('La observación médica debe ser un texto'),
     body('estado')
         .isBoolean().withMessage('El estado debe ser un booleano')
 ];

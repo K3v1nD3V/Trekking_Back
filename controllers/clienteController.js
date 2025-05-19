@@ -31,12 +31,20 @@ const postCliente = async (req, res) => {
           return res.status(400).json({errors: errors.array()})
       }
   try {
-    const { body } = req;
-    const cliente = new Cliente(body);
+    const { documento, nombre, apellido, correo, telefono, observacion_medica, estado } = req.body;
+    const cliente = new Cliente({
+      documento,
+      nombre,
+      apellido,
+      correo,
+      telefono,
+      observacion_medica,
+      estado
+  });
     await cliente.save();
-    res.json({ msg: 'Cliente creado exitosamente' });
+    res.status(201).json({ msg: 'Cliente creado exitosamente', cliente });
   } catch (error) {
-    res.status(500).json({ msg: 'Error creando el cliente' });
+    res.status(500).json({ msg: 'Error creando el cliente', error: error.message });
   }
 };
 
@@ -46,15 +54,19 @@ const putCliente = async (req, res) => {
       return res.status(400).json({errors: errors.array()})
   }
   try {
-    const { documento, nombre, apellido, correo, telefono, estado } = req.body;
-    const id = req.params.id;
-    await Cliente.findOneAndUpdate(
-      { _id: id },
-      { documento, nombre, apellido, correo, telefono, estado }
-    );
-    res.json({ msg: 'Cliente actualizado exitosamente' });
+    const { documento, nombre, apellido, correo, telefono, observacion_medica, estado } = req.body;    const id = req.params.id;
+    const clienteActualizado = await Cliente.findByIdAndUpdate(
+      id,
+      { documento, nombre, apellido, correo, telefono, observacion_medica, estado },
+      { new: true }
+  );
+  if (!clienteActualizado) {
+    return res.status(404).json({ msg: 'Cliente no encontrado' });
+  }
+  res.json({ msg: 'Cliente actualizado exitosamente', cliente: clienteActualizado });
+  
   } catch (error) {
-    res.status(500).json({ msg: 'Error actualizando el cliente' });
+    res.status(500).json({ msg: 'Error actualizando el cliente', error: error.message });
   }
 };
 

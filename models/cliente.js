@@ -22,6 +22,9 @@ const clienteSchema = new Schema({
     telefono: {
         type: String,
     },
+    observacion_medica: {
+        type: String,
+    },
     estado: {
         type: Boolean,
         default: true

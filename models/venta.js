@@ -18,7 +18,13 @@ const ventaSchema = new Schema({
     fecha: {
         type: Date,
         required: [true, 'La fecha es requerida']
-    }
+    },
+    acompañantes: [
+        {
+            type: Types.ObjectId,
+            ref: 'Cliente',
+        }
+    ]
 });
 
 

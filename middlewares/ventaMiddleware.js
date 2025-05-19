@@ -14,7 +14,16 @@ const ventaBaseValidation = [
             return true;
         }),    
     body('valor')
-        .isNumeric().withMessage('El valor debe ser un número')    
+        .isNumeric().withMessage('El valor debe ser un número'),
+    body('acompañantes')
+        .optional()
+        .isArray().withMessage('Los acompañantes deben ser un array')
+        .custom((acompañantes) => {
+            if (!acompañantes.every(id => /^[a-fA-F0-9]{24}$/.test(id))) {
+                throw new Error('Todos los IDs de acompañantes deben ser válidos');
+            }
+            return true;
+        })
 ];
 
 const postVentaValidation = [

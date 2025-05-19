@@ -2,6 +2,7 @@ const Usuario = require('../models/usuario');
 const Rol = require('../models/rol');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); 
+const nodemailer = require('nodemailer');
 
 const getUsuarios = async (req, res) => {
     try {
@@ -107,11 +108,91 @@ const loginUsuario = async (req, res) => {
     res.json({ token, rol: rol.nombre }); // También enviamos el nombre del rol en la respuesta
 };
 
+
+const recuperarContraseña = async (req, res) => {
+    const { correo } = req.body;
+
+    try {
+        const usuario = await Usuario.findOne({ correo });
+        if (!usuario) {
+            return res.status(404).json({ msg: 'Correo no registrado' });
+        }
+
+        // Crear token JWT con expiración
+        const token = jwt.sign(
+            { id: usuario._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' } // Expira en 15 minutos
+        );
+
+        // Crear URL de recuperación
+        const link = `${process.env.FRONTEND_URL}/recuperar/${token}`;
+
+        // Configurar el transporte
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        // Contenido HTML del correo
+        const html = `
+            <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #C81E17;">Recuperación de Contraseña</h2>
+                <p>Hola <b>${usuario.nombre}</b>,</p>
+                <p>Hemos recibido una solicitud para restablecer tu contraseña.</p>
+                <a href="${link}" style="display: inline-block; padding: 10px 20px; background-color: #C81E17; color: #fff; text-decoration: none; border-radius: 5px;">Restablecer contraseña</a>
+                <p>Este enlace expirará en 15 minutos.</p>
+            </div>
+        `;
+
+        await transporter.sendMail({
+            from: `"Trekking San Cristóbal" <${process.env.EMAIL_USER}>`,
+            to: correo,
+            subject: 'Recuperación de contraseña',
+            html
+        });
+
+        res.json({ msg: 'Correo enviado correctamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error al enviar el correo' });
+    }
+};
+
+const cambiarContraseña = async (req, res) => {
+    const { token, nuevaContraseña } = req.body;
+
+    try {
+        // Verificar el token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // Buscar el usuario por ID
+        const usuario = await Usuario.findById(decoded.id);
+        if (!usuario) {
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
+        }
+
+        // Actualizar la contraseña
+        usuario.contraseña = await bcrypt.hash(nuevaContraseña, 10); // Encriptar la nueva contraseña
+        await usuario.save();
+
+        res.json({ msg: 'Contraseña actualizada correctamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ msg: 'Token inválido o expirado' });
+    }
+};
+
 module.exports = {
     getUsuarios,
     getUsuarioById,
     createUsuario,
     updateUsuario,
     deleteUsuario,
-    loginUsuario 
+    loginUsuario,
+    recuperarContraseña,
+    cambiarContraseña
 };

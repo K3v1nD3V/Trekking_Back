@@ -24,7 +24,7 @@ const getTourById = async (req, res) => {
 
 const createTour = async (req, res) => {
     try {
-        const { fechaHora, id_paquete } = req.body; // Cambiar a `fechaHora`
+        const { fechaHora, id_paquete, cupos, fecha_limite_inscripcion } = req.body; // Cambiar a `fechaHora`
 
         const paqueteExists = await Paquete.findById(id_paquete);
         if (!paqueteExists) {

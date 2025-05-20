@@ -12,6 +12,7 @@ const ventaBaseValidation = [
                 throw new Error('La fecha no puede ser futura');
             }
             return true;
+            
         }),    
     body('valor')
         .isNumeric().withMessage('El valor debe ser un número'),
@@ -23,7 +24,9 @@ const ventaBaseValidation = [
                 throw new Error('Todos los IDs de acompañantes deben ser válidos');
             }
             return true;
-        })
+        }),
+        body('estado')
+            .isBoolean().withMessage('El estado debe ser un booleano')
 ];
 
 const postVentaValidation = [

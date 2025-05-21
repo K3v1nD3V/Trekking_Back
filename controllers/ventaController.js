@@ -7,7 +7,8 @@ const getVentas = async (req, res) => {
     try {
         const ventas = await Venta.find()
             .populate('id_cliente')
-            .populate('id_paquete');
+            .populate('id_paquete')
+            .populate('acompañantes');
         res.json(ventas);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -34,7 +35,7 @@ const postVenta = async (req, res) => {
               return res.status(400).json({errors: errors.array()})
           }
     try {
-        const { id_cliente, id_paquete, valor, fecha, acompañantes } = req.body;
+        const { id_cliente, id_paquete, valor, fecha, acompañantes, estado } = req.body;
 
         // Validar existencia del cliente
         const clienteExists = await Cliente.findById(id_cliente);
@@ -70,7 +71,8 @@ const postVenta = async (req, res) => {
             id_paquete,
             valor,
             fecha: new Date(fecha),
-            acompañantes: acompañantes || [] 
+            acompañantes: acompañantes || [] ,
+            estado: estado !== undefined ? estado : true
         });
 
         // Guardar y devolver la venta con datos completos
@@ -85,9 +87,28 @@ const postVenta = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+const updateVenta = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const updatedVenta = await Venta.findByIdAndUpdate(id, updateData, { new: true });
+
+    if (!updatedVenta) {
+      return res.status(404).json({ message: 'Venta no encontrada' });
+    }
+
+    res.json(updatedVenta);
+  } catch (error) {
+    console.error('Error al actualizar venta:', error);
+    res.status(500).json({ message: 'Error al actualizar la venta', error });
+  }
+};
+
 
 module.exports = {
     getVentas,
     getVentaById,
     postVenta, 
+    updateVenta
 };

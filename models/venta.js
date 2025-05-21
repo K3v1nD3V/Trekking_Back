@@ -24,7 +24,11 @@ const ventaSchema = new Schema({
             type: Types.ObjectId,
             ref: 'Cliente',
         }
-    ]
+    ],
+    estado: {
+        type: Boolean,
+        default: true
+    }
 });
 
 

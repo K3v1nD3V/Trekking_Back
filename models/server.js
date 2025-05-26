@@ -30,13 +30,20 @@ class Server {
     route() {
         this.app.use(express.json());
         
-        const corsOptions = {
-            origin: ['http://localhost:5173', 'https://trekking-back.onrender.com'], // Permite múltiples orígenes
-            methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-            allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
-        };
+        // const corsOptions = {
+        //     origin: ['http://localhost:5173', 'https://trekking-back.onrender.com'], // Permite múltiples orígenes
+        //     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+        //     allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+        // };
         
+        // this.app.use(cors(corsOptions));
+        const corsOptions = {
+        origin: '*', // ⚠️ Solo para desarrollo — acepta solicitudes desde cualquier origen
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        };
         this.app.use(cors(corsOptions));
+
           
         // this.app.use(cors({
         //     origin: 'http://localhost:5173', // Permite solo este origen

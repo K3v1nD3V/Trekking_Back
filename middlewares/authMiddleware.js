@@ -25,6 +25,3 @@ const authMiddleware = (requiredPermissions = []) => {
 };
 
 module.exports = authMiddleware;
-
-
-module.exports = authMiddleware;

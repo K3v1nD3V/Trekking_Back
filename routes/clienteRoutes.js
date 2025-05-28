@@ -23,7 +23,7 @@ const {
 
 router.get('/',authMiddleware(["admin"]),validate, getClientes);
 router.get('/:id',authMiddleware(["admin"]), getClienteByIdValidation, validate, getClienteById);
-router.post('/', authMiddleware(["admin"]),clienteBaseValidation, validate, postCliente);
+router.post('/', clienteBaseValidation, validate, postCliente);
 router.put('/:id',authMiddleware(["admin"]),updateClienteValidation, validate, putCliente);
 router.delete('/:id', authMiddleware(["admin"]),deleteClienteValidation, validate, deleteCliente);
 

@@ -32,7 +32,7 @@ router.post('/check-existence', async (req, res) => {
     const { documento, correo } = req.body;
 
     // Verificar por documento o correo
-    const cliente = await cliente.findOne({
+    const cliente = await Cliente.findOne({
       $or: [{ documento }, { correo }]
     });
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const errorMiddleware = require('../middlewares/errorMiddleware'); 
 const authMiddleware = require('../middlewares/authMiddleware');
 const validate = require('../middlewares/validationMiddleware'); 
+const Cliente = require('../models/cliente'); // Importar el modelo Cliente
 
 const { 
   getClientes, 
@@ -31,7 +32,7 @@ router.post('/check-existence', async (req, res) => {
     const { documento, correo } = req.body;
 
     // Verificar por documento o correo
-    const cliente = await Cliente.findOne({
+    const cliente = await cliente.findOne({
       $or: [{ documento }, { correo }]
     });
 

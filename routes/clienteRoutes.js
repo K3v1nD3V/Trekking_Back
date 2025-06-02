@@ -28,6 +28,8 @@ router.delete('/:id', authMiddleware(["admin"]), deleteClienteValidation, valida
 
 // Nueva ruta para verificar existencia
 router.post('/check-existence', async (req, res) => {
+  console.log('Verificando existencia de cliente con documento o correo:', req.body);
+  
   try {
     const { documento, correo } = req.body;
 

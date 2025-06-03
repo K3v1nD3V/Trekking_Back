@@ -14,11 +14,11 @@ const validatePaquete = [
     
     check('lugar_encuentro')
         .isString().withMessage('El lugar de encuentro debe ser un texto')
-        .isLength({ min: 10 }).withMessage('El lugar de encuentro debe tener al menos 10 caracteres'),
+        .isLength({ min: 1 }).withMessage('El lugar de encuentro debe tener al menos 10 caracteres'),
     
     check('destino')
         .isString().withMessage('El destino debe ser un texto')
-        .isLength({ min: 10 }).withMessage('El destino debe tener al menos 10 caracteres'),
+        .isLength({ min: 1 }).withMessage('El destino debe tener al menos 10 caracteres'),
         
     check('servicios')
         .isArray().withMessage('Servicios debe ser un array')

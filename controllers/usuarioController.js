@@ -34,8 +34,9 @@ const createUsuario = async (req, res) => {
             contraseña,
             rol 
         });
-
+        
         const usuarioGuardado = await nuevoUsuario.save();
+        await enviarCorreoVerificacion(usuarioGuardado);
         res.status(201).json(usuarioGuardado);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -190,6 +191,47 @@ const cambiarContraseña = async (req, res) => {
     }
 };
 
+const enviarCorreoVerificacion = async (usuario) => {
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const link = `${process.env.FRONTEND_URL}/verificar/${token}`;
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+    });
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2 style="color: #C81E17;">Verificación de Cuenta</h2>
+            <p>Hola <b>${usuario.nombre}</b>,</p>
+            <p>Gracias por registrarte en nuestro sistema. Para activar tu cuenta, por favor haz clic en el siguiente botón:</p>
+            <a href="${link}" style="display: inline-block; padding: 10px 20px; background-color: #C81E17; color: #fff; text-decoration: none; border-radius: 5px;">Verificar Cuenta</a>
+            <p>Este enlace expirará en 24 horas.</p>
+        </div>
+    `;
+
+    await transporter.sendMail({
+        from: `"Trekking San Cristóbal" <${process.env.EMAIL_USER}>`,
+        to: usuario.correo,
+        subject: 'Verificación de cuenta',
+        html
+    });
+};
+
+
+
+const verificarCorreo = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        await Usuario.findByIdAndUpdate(decoded.id, { verificado: true });
+        res.json({ msg: 'Cuenta verificada correctamente' });
+    } catch (error) {
+        res.status(400).json({ msg: 'Token inválido o expirado' });
+    }
+};
+
+
 module.exports = {
     getUsuarios,
     getUsuarioById,
@@ -198,5 +240,7 @@ module.exports = {
     deleteUsuario,
     loginUsuario,
     recuperarContraseña,
-    cambiarContraseña
+    cambiarContraseña,
+    enviarCorreoVerificacion,
+    verificarCorreo
 };

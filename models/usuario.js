@@ -19,7 +19,8 @@ const usuarioSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Rol',
         required: [true, 'El rol es requerido']
-    }
+    },
+    verificado: { type: Boolean, default: false },
 });
 
 usuarioSchema.pre('save', async function(next) {

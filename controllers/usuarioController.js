@@ -117,15 +117,6 @@ const loginUsuario = async (req, res) => {
     });
   };
   
-  // ✅ Aquí está el cambio
-  res.json({
-    token,
-    usuario: {
-      nombre: usuario.nombre,
-      correo: usuario.correo,
-      rol: rol.nombre
-    }
-  });
 
 
 const recuperarContraseña = async (req, res) => {

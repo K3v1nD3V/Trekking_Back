@@ -79,29 +79,44 @@ const deleteUsuario = async (req, res) => {
 };
 
 const loginUsuario = async (req, res) => {
-  const { correo, contraseña } = req.body;
-
-  const usuario = await Usuario.findOne({ correo });
-  if (!usuario) {
-    return res.status(400).json({ msg: 'Credenciales inválidas' });
-  }
-
-  const isMatch = await bcrypt.compare(contraseña, usuario.contraseña);
-  if (!isMatch) {
-    return res.status(400).json({ msg: 'Credenciales inválidas' });
-  }
-
-  const rol = await Rol.findById(usuario.rol);
-  if (!rol) {
-    return res.status(500).json({ msg: 'Error al obtener el rol del usuario' });
-  }
-
-  const token = jwt.sign(
-    { id: usuario._id, rol: rol.nombre },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
-  );
-
+    const { correo, contraseña } = req.body;
+    const usuario = await Usuario.findOne({ correo });
+  
+    if (!usuario) {
+      return res.status(400).json({ msg: 'Credenciales inválidas' });
+    }
+  
+    // ⚡️ Verificar si el correo ha sido confirmado
+    if (!usuario.verificado) {
+      return res.status(401).json({ msg: 'Cuenta no verificada. Revisa tu correo electrónico.' });
+    }
+  
+    const isMatch = await bcrypt.compare(contraseña, usuario.contraseña);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Credenciales inválidas' });
+    }
+  
+    const rol = await Rol.findById(usuario.rol);
+    if (!rol) {
+      return res.status(500).json({ msg: 'Error al obtener el rol del usuario' });
+    }
+  
+    const token = jwt.sign(
+      { id: usuario._id, rol: rol.nombre },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+  
+    res.json({
+      token,
+      usuario: {
+        nombre: usuario.nombre,
+        correo: usuario.correo,
+        rol: rol.nombre
+      }
+    });
+  };
+  
   // ✅ Aquí está el cambio
   res.json({
     token,
@@ -111,7 +126,6 @@ const loginUsuario = async (req, res) => {
       rol: rol.nombre
     }
   });
-};
 
 
 const recuperarContraseña = async (req, res) => {

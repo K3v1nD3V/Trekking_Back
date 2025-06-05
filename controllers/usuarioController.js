@@ -207,7 +207,7 @@ const cambiarContraseña = async (req, res) => {
 
 const enviarCorreoVerificacion = async (usuario) => {
     const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    const link = `${process.env.FRONTEND_URL}/verificar/${token}`;
+    const link = `${process.env.FRONTEND_URL}/login`;
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',

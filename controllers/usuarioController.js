@@ -198,7 +198,7 @@ const cambiarContraseña = async (req, res) => {
 
 const enviarCorreoVerificacion = async (usuario) => {
     const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    const link = `${process.env.FRONTEND_URL}/login`;
+    const link = `${process.env.FRONTEND_URL}/verificar/${token}`;
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -229,12 +229,29 @@ const verificarCorreo = async (req, res) => {
     try {
         const { token } = req.params;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        await Usuario.findByIdAndUpdate(decoded.id, { verificado: true });
-        res.json({ msg: 'Cuenta verificada correctamente' });
+
+        console.log("ID decodificado:", decoded.id); // 🔍 Depuración
+
+        const usuarioActualizado = await Usuario.findByIdAndUpdate(
+            decoded.id,
+            { verificado: true },
+            { new: true }
+        );
+
+        if (!usuarioActualizado) {
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
+        }
+
+        console.log("Usuario actualizado:", usuarioActualizado);
+
+        res.redirect(`${process.env.FRONTEND_URL}/login`); // 👈 Redirige después de actualizar la BD
     } catch (error) {
+        console.error("Error en verificación:", error);
         res.status(400).json({ msg: 'Token inválido o expirado' });
     }
 };
+
+
 
 
 module.exports = {

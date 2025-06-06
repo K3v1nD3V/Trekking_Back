@@ -34,8 +34,9 @@ const createUsuario = async (req, res) => {
             contraseña,
             rol 
         });
-
+        
         const usuarioGuardado = await nuevoUsuario.save();
+        await enviarCorreoVerificacion(usuarioGuardado);
         res.status(201).json(usuarioGuardado);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -78,39 +79,45 @@ const deleteUsuario = async (req, res) => {
 };
 
 const loginUsuario = async (req, res) => {
-  const { correo, contraseña } = req.body;
-
-  const usuario = await Usuario.findOne({ correo });
-  if (!usuario) {
-    return res.status(400).json({ msg: 'Credenciales inválidas' });
-  }
-
-  const isMatch = await bcrypt.compare(contraseña, usuario.contraseña);
-  if (!isMatch) {
-    return res.status(400).json({ msg: 'Credenciales inválidas' });
-  }
-
-  const rol = await Rol.findById(usuario.rol);
-  if (!rol) {
-    return res.status(500).json({ msg: 'Error al obtener el rol del usuario' });
-  }
-
-  const token = jwt.sign(
-    { id: usuario._id, rol: rol.nombre },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
-  );
-
-  // ✅ Aquí está el cambio
-  res.json({
-    token,
-    usuario: {
-      nombre: usuario.nombre,
-      correo: usuario.correo,
-      rol: rol.nombre
+    const { correo, contraseña } = req.body;
+    const usuario = await Usuario.findOne({ correo });
+    console.log("Datos recibidos en login:", req.body);
+  
+    if (!usuario) {
+      return res.status(400).json({ msg: 'Credenciales inválidas' });
     }
-  });
-};
+  
+    // ⚡️ Verificar si el correo ha sido confirmado
+    if (!usuario.verificado) {
+      return res.status(401).json({ msg: 'Cuenta no verificada. Revisa tu correo electrónico.' });
+    }
+  
+    const isMatch = await bcrypt.compare(contraseña, usuario.contraseña);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Credenciales inválidas' });
+    }
+  
+    const rol = await Rol.findById(usuario.rol);
+    if (!rol) {
+      return res.status(500).json({ msg: 'Error al obtener el rol del usuario' });
+    }
+  
+    const token = jwt.sign(
+      { id: usuario._id, rol: rol.nombre },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+  
+    res.json({
+      token,
+      usuario: {
+        nombre: usuario.nombre,
+        correo: usuario.correo,
+        rol: rol.nombre
+      }
+    });
+  };
+  
 
 
 const recuperarContraseña = async (req, res) => {
@@ -190,6 +197,64 @@ const cambiarContraseña = async (req, res) => {
     }
 };
 
+const enviarCorreoVerificacion = async (usuario) => {
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const link = `${process.env.FRONTEND_URL}/verificar/${token}`;
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+    });
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2 style="color: #C81E17;">Verificación de Cuenta</h2>
+            <p>Hola <b>${usuario.nombre}</b>,</p>
+            <p>Gracias por registrarte en nuestro sistema. Para activar tu cuenta, por favor haz clic en el siguiente botón:</p>
+            <a href="${link}" style="display: inline-block; padding: 10px 20px; background-color: #C81E17; color: #fff; text-decoration: none; border-radius: 5px;">Verificar Cuenta</a>
+            <p>Este enlace expirará en 24 horas.</p>
+        </div>
+    `;
+
+    await transporter.sendMail({
+        from: `"Trekking San Cristóbal" <${process.env.EMAIL_USER}>`,
+        to: usuario.correo,
+        subject: 'Verificación de cuenta',
+        html
+    });
+};
+
+
+
+const verificarCorreo = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        console.log("ID decodificado:", decoded.id); // 🔍 Depuración
+
+        const usuarioActualizado = await Usuario.findByIdAndUpdate(
+            decoded.id,
+            { verificado: true },
+            { new: true }
+        );
+
+        if (!usuarioActualizado) {
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
+        }
+
+        console.log("Usuario actualizado:", usuarioActualizado);
+
+        res.redirect(`${process.env.FRONTEND_URL}/login`); // 👈 Redirige después de actualizar la BD
+    } catch (error) {
+        console.error("Error en verificación:", error);
+        res.status(400).json({ msg: 'Token inválido o expirado' });
+    }
+};
+
+
+
+
 module.exports = {
     getUsuarios,
     getUsuarioById,
@@ -198,5 +263,7 @@ module.exports = {
     deleteUsuario,
     loginUsuario,
     recuperarContraseña,
-    cambiarContraseña
+    cambiarContraseña,
+    enviarCorreoVerificacion,
+    verificarCorreo
 };

@@ -38,11 +38,12 @@ class Server {
         
         // this.app.use(cors(corsOptions));
         const corsOptions = {
-        origin: '*', // ⚠️ Solo para desarrollo — acepta solicitudes desde cualquier origen
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
+            origin: ['http://localhost:5173', 'https://trekking-back.onrender.com'], 
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+            allowedHeaders: ['Content-Type', 'Authorization'],
         };
         this.app.use(cors(corsOptions));
+        
 
           
         // this.app.use(cors({

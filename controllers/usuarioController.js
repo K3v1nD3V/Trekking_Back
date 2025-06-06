@@ -117,9 +117,8 @@ const loginUsuario = async (req, res) => {
       }
     });
   };
-  
 
-
+// recuperar contraseña todavia no en uso
 const recuperarContraseña = async (req, res) => {
     const { correo } = req.body;
 
@@ -172,7 +171,7 @@ const recuperarContraseña = async (req, res) => {
         res.status(500).json({ msg: 'Error al enviar el correo' });
     }
 };
-
+// cambiar Contraseña todavia no en uso
 const cambiarContraseña = async (req, res) => {
     const { token, nuevaContraseña } = req.body;
 
@@ -197,14 +196,16 @@ const cambiarContraseña = async (req, res) => {
     }
 };
 
+// NodeMailer para enviar correos de verificación
 const enviarCorreoVerificacion = async (usuario) => {
-    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    const link = `${process.env.FRONTEND_URL}/verificar/${token}`;
+    
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '24h' }); // token expira en 24 horas cambiarlo, cambiarlo a 15 minutos
+    const link = `${process.env.FRONTEND_URL}/verificar/${token}`; //link que le llega al usuario
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
-    });
+    }); // Envio de correo con nodemailer desde el email de gmail registrado en .env
 
     const html = `
         <div style="font-family: Arial, sans-serif; color: #333;">
@@ -214,14 +215,14 @@ const enviarCorreoVerificacion = async (usuario) => {
             <a href="${link}" style="display: inline-block; padding: 10px 20px; background-color: #C81E17; color: #fff; text-decoration: none; border-radius: 5px;">Verificar Cuenta</a>
             <p>Este enlace expirará en 24 horas.</p>
         </div>
-    `;
+    `; // se crea la plantilla del correo en HTML
 
     await transporter.sendMail({
         from: `"Trekking San Cristóbal" <${process.env.EMAIL_USER}>`,
         to: usuario.correo,
         subject: 'Verificación de cuenta',
         html
-    });
+    }); // Envio del correo al usuario
 };
 
 
@@ -245,7 +246,7 @@ const verificarCorreo = async (req, res) => {
 
         console.log("Usuario actualizado:", usuarioActualizado);
 
-        res.redirect(`${process.env.FRONTEND_URL}/login`); // 👈 Redirige después de actualizar la BD
+        // res.redirect(`${process.env.FRONTEND_URL}/login`); // 👈 Redirige después de actualizar la BD
     } catch (error) {
         console.error("Error en verificación:", error);
         res.status(400).json({ msg: 'Token inválido o expirado' });

@@ -20,7 +20,9 @@ const usuarioSchema = new Schema({
         ref: 'Rol',
         required: [true, 'El rol es requerido']
     },
-    verificado: { type: Boolean, default: false },
+    verificado: { 
+        type: Boolean, 
+        default: false },
 });
 
 usuarioSchema.pre('save', async function(next) {

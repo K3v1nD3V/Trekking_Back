@@ -23,8 +23,10 @@ router.post('/login', loginUsuario);
 router.put('/:id', authMiddleware(["admin"]), updateUsuario); 
 
 router.delete('/:id', authMiddleware(["admin"]), deleteUsuario);
-router.post('/recuperar', recuperarContraseña);
-router.post('/cambiar-contrasena', cambiarContraseña);
+
+router.post('/recuperar', recuperarContraseña);//Todavia no en uso
+router.post('/cambiar-contrasena', cambiarContraseña); //todavia no en uso
+
 router.get('/verificar/:token', verificarCorreo);
 
 router.use(errorMiddleware);

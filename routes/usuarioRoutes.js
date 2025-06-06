@@ -15,14 +15,14 @@ const {
     verificarCorreo
 } = require('../controllers/usuarioController');
 
-router.get('/', authMiddleware(["admin"]), getUsuarios);
+router.get('/', getUsuarios);
 router.get('/:id', authMiddleware(["admin"]), getUsuarioById);
 router.post('/', createUsuario); // Ruta para crear un nuevo usuario
 
 router.post('/login', loginUsuario);
 router.put('/:id', authMiddleware(["admin"]), updateUsuario); 
 
-router.delete('/:id', authMiddleware(["admin"]), deleteUsuario);
+router.delete('/:id', deleteUsuario);
 
 router.post('/recuperar', recuperarContraseña);//Todavia no en uso
 router.post('/cambiar-contrasena', cambiarContraseña); //todavia no en uso

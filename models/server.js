@@ -38,7 +38,7 @@ class Server {
         
         // this.app.use(cors(corsOptions));
         const corsOptions = {
-            origin: ['http://localhost:5173', 'https://trekking-back.onrender.com'], 
+            origin: ['http://localhost:5173', 'https://trekking-back.onrender.com', 'https://trekkingsancristobal.netlify.app'], 
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             allowedHeaders: ['Content-Type', 'Authorization'],
         };

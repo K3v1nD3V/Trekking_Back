@@ -8,7 +8,7 @@ const errorMiddleware = require('../middlewares/errorMiddleware'); // Add this l
 
 const router = Router();
 
-router.get('/', authMiddleware(["admin"]), getRoles);
+router.get('/', getRoles);
 // router.get('/', authMiddleware(["admin"]), getRoles);
 router.get('/:id', authMiddleware(["admin"]), getRolById);
 router.post('/',authMiddleware(["admin"]), rolValidate, validate, postRol);

@@ -81,6 +81,7 @@ const deleteUsuario = async (req, res) => {
 const loginUsuario = async (req, res) => {
     const { correo, contraseña } = req.body;
     const usuario = await Usuario.findOne({ correo });
+    console.log("Datos recibidos en login:", req.body);
   
     if (!usuario) {
       return res.status(400).json({ msg: 'Credenciales inválidas' });

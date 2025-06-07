@@ -200,7 +200,7 @@ const cambiarContraseña = async (req, res) => {
 const enviarCorreoVerificacion = async (usuario) => {
     
     const token = jwt.sign({ id: usuario._id, correo: usuario.correo, contraseña: usuario.contraseña }, process.env.JWT_SECRET, { expiresIn: '24h' }); // token expira en 24 horas cambiarlo, cambiarlo a 15 minutos
-    const link = `${process.env.FRONTEND_URL}/login?${token}`; //link que le llega al usuario
+    const link = `${process.env.FRONTEND_URL}/login?t=${token}`; //link que le llega al usuario
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -232,7 +232,8 @@ const verificarCorreo = async (req, res) => {
         const { token } = req.params;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        console.log("ID decodificado:", decoded.id);
+        console.log("Token recibido:", token);
+        console.log("Datos decodificados:", decoded);
 
         const usuarioActualizado = await Usuario.findByIdAndUpdate(
             decoded.id,

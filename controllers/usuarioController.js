@@ -171,22 +171,17 @@ const recuperarContraseña = async (req, res) => {
         res.status(500).json({ msg: 'Error al enviar el correo' });
     }
 };
-// cambiar Contraseña todavia no en uso
+
 const cambiarContraseña = async (req, res) => {
     const { token, nuevaContraseña } = req.body;
 
     try {
-        // Verificar el token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        // Buscar el usuario por ID
         const usuario = await Usuario.findById(decoded.id);
         if (!usuario) {
             return res.status(404).json({ msg: 'Usuario no encontrado' });
         }
-
-        // Actualizar la contraseña
-        usuario.contraseña = await bcrypt.hash(nuevaContraseña, 10); // Encriptar la nueva contraseña
+        usuario.contraseña = nuevaContraseña;
         await usuario.save();
 
         res.json({ msg: 'Contraseña actualizada correctamente' });
@@ -195,6 +190,7 @@ const cambiarContraseña = async (req, res) => {
         res.status(400).json({ msg: 'Token inválido o expirado' });
     }
 };
+
 
 // NodeMailer para enviar correos de verificación
 const enviarCorreoVerificacion = async (usuario) => {

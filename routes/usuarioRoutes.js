@@ -15,7 +15,7 @@ const {
     verificarCorreo
 } = require('../controllers/usuarioController');
 
-router.get('/', authMiddleware(["admin"]), getUsuarios);
+router.get('/', getUsuarios);
 router.get('/:id', authMiddleware(["admin"]), getUsuarioById);
 router.post('/', createUsuario); // Ruta para crear un nuevo usuario
 

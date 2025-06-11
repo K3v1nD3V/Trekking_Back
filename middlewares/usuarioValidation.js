@@ -1,9 +1,11 @@
 const { check } = require('express-validator');
-const Usuario = require('../models/usuario'); // Assuming Usuario model exists
+const Usuario = require('../models/usuario');
 
 const validateUsuario = [
     check('nombre').notEmpty().withMessage('El nombre del usuario es requerido')
         .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres'),
+    check('apellido').notEmpty().withMessage('El apellido del usuario es requerido')
+        .isLength({ min: 2 }).withMessage('El apellido debe tener al menos 2 caracteres'),
     check('correo').isEmail().withMessage('El correo debe ser un email válido')
         .custom(async (value) => {
             const user = await Usuario.findOne({ correo: value });

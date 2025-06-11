@@ -5,13 +5,6 @@ const clienteBaseValidation = [
         .notEmpty().withMessage('El documento del cliente es requerido')
         .isLength({ min: 8, max: 12 }).withMessage('El documento debe tener entre 8 y 12 caracteres')
         .matches(/^\d+$/).withMessage('El documento debe contener solo números'),
-    body('nombre')
-        .notEmpty().withMessage('El nombre del cliente es requerido'),
-    body('apellido')
-        .notEmpty().withMessage('El apellido del cliente es requerido'),
-    body('correo')
-        .notEmpty().withMessage('El correo del cliente es requerido')
-        .isEmail().withMessage('El correo debe tener un formato válido'),
     body('telefono')
         .notEmpty().withMessage('El teléfono del cliente es requerido')
         .matches(/^\d+$/).withMessage('El teléfono debe contener solo números'),
@@ -19,7 +12,10 @@ const clienteBaseValidation = [
         .optional()
         .isString().withMessage('La observación médica debe ser un texto'),
     body('estado')
-        .isBoolean().withMessage('El estado debe ser un booleano')
+        .isBoolean().withMessage('El estado debe ser un booleano'),
+    body('id_usuario')
+        .notEmpty().withMessage('El id_usuario es requerido')
+        .isMongoId().withMessage('El id_usuario debe ser un ObjectId válido')
 ];
 
 const postClienteValidation = [

@@ -6,19 +6,6 @@ const clienteSchema = new Schema({
         required: [true, 'El documento es requerido'],
         unique: true
     },
-    nombre: {
-        type: String,
-        required: [true, 'Los nombres son requeridos']
-    },
-    apellido: {
-        type: String,
-        required: [true, 'Los apellidos son requeridos']
-    },
-    correo: {
-        type: String,
-        required: [true, 'El correo es requerido'],
-        unique: true
-    },
     telefono: {
         type: String,
     },
@@ -28,6 +15,11 @@ const clienteSchema = new Schema({
     estado: {
         type: Boolean,
         default: true
+    },
+    id_usuario: {
+        type: Schema.Types.ObjectId,
+        ref: 'Usuario',
+        required: [true, 'El id de usuario es requerido']
     }
 });
 

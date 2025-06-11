@@ -27,9 +27,10 @@ const getUsuarioById = async (req, res) => {
 
 const createUsuario = async (req, res) => {
     try {
-        const { nombre, correo, contraseña, rol } = req.body; 
+        const { nombre, apellido, correo, contraseña, rol } = req.body; 
         const nuevoUsuario = new Usuario({
             nombre,
+            apellido,
             correo,
             contraseña,
             rol 
@@ -45,8 +46,8 @@ const createUsuario = async (req, res) => {
 
 const updateUsuario = async (req, res) => {
     try {
-        const { nombre, correo, contraseña, rol } = req.body; 
-        const updates = { nombre, correo, rol }; 
+        const { nombre, apellido, correo, contraseña, rol } = req.body; 
+        const updates = { nombre, apellido, correo, rol }; 
 
         if (contraseña) {
             updates.contraseña = await bcrypt.hash(contraseña, 10); 

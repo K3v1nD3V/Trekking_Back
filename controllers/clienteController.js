@@ -4,7 +4,7 @@ const {validationResult} = require('express-validator');
 const getClientes = async (req, res) => {
   
   try {
-    const clientes = await Cliente.find();
+    const clientes = await Cliente.find().populate('id_usuario', 'nombre apellido correo'); // Popula el campo id_usuario con nombre y correo
     res.json(clientes);
   } catch (error) {
     res.status(500).json({ msg: 'Error obteniendo los clientes' });
@@ -26,21 +26,25 @@ const getClienteById = async (req, res) => {
 };
 
 const postCliente = async (req, res) => {
+  console.log('Creando cliente con datos:', req.body);
+  
   const errors = validationResult(req);
-      if(!errors.isEmpty()) {
-          return res.status(400).json({errors: errors.array()})
-      }
+  console.log('Errores de validación:', errors.array());
+  
+  if(!errors.isEmpty()) {
+      return res.status(400).json({errors: errors.array()})
+  }
   try {
-    const { documento, nombre, apellido, correo, telefono, observacion_medica, estado } = req.body;
+    const { documento, telefono, observacion_medica, estado, id_usuario } = req.body;
+    console.log('Datos del cliente:', { documento, telefono, observacion_medica, estado, id_usuario });
     const cliente = new Cliente({
       documento,
-      nombre,
-      apellido,
-      correo,
       telefono,
       observacion_medica,
-      estado
-  });
+      estado,
+      id_usuario
+    });
+    console.log('Cliente creado:', cliente);
     await cliente.save();
     res.status(201).json({ msg: 'Cliente creado exitosamente', cliente });
   } catch (error) {
@@ -54,17 +58,17 @@ const putCliente = async (req, res) => {
       return res.status(400).json({errors: errors.array()})
   }
   try {
-    const { documento, nombre, apellido, correo, telefono, observacion_medica, estado } = req.body;    const id = req.params.id;
+    const { documento, telefono, observacion_medica, estado, id_usuario } = req.body;
+    const id = req.params.id;
     const clienteActualizado = await Cliente.findByIdAndUpdate(
       id,
-      { documento, nombre, apellido, correo, telefono, observacion_medica, estado },
+      { documento, telefono, observacion_medica, estado, id_usuario },
       { new: true }
-  );
-  if (!clienteActualizado) {
-    return res.status(404).json({ msg: 'Cliente no encontrado' });
-  }
-  res.json({ msg: 'Cliente actualizado exitosamente', cliente: clienteActualizado });
-  
+    );
+    if (!clienteActualizado) {
+      return res.status(404).json({ msg: 'Cliente no encontrado' });
+    }
+    res.json({ msg: 'Cliente actualizado exitosamente', cliente: clienteActualizado });
   } catch (error) {
     res.status(500).json({ msg: 'Error actualizando el cliente', error: error.message });
   }

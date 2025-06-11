@@ -29,14 +29,30 @@ router.delete('/:id', authMiddleware(["admin"]), deleteClienteValidation, valida
 // Nueva ruta para verificar existencia
 router.post('/check-existence', async (req, res) => {
   console.log('Verificando existencia de cliente con documento o correo:', req.body);
-  
+
   try {
     const { documento, correo } = req.body;
 
-    // Verificar por documento o correo
-    const cliente = await Cliente.findOne({
-      $or: [{ documento }, { correo }]
-    });
+    let cliente = null;
+
+    if (documento) {
+      cliente = await Cliente.findOne({ documento });
+    }
+
+    if (!cliente && correo) {
+      // Buscar cliente cuyo usuario relacionado tenga ese correo
+      cliente = await Cliente.findOne().populate({
+        path: 'id_usuario',
+        match: { correo }
+      });
+
+      // Si el populate no encontró usuario, cliente.id_usuario será null
+      if (cliente && !cliente.id_usuario) {
+        cliente = null;
+      }
+    }
+
+    console.log('Cliente encontrado:', cliente);
 
     if (cliente) {
       return res.json({ exists: true });

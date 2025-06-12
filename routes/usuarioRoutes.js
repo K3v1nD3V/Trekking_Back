@@ -16,7 +16,7 @@ const {
 } = require('../controllers/usuarioController');
 
 router.get('/', getUsuarios);
-router.get('/:id', authMiddleware(["admin"]), getUsuarioById);
+router.get('/:id', getUsuarioById);
 router.post('/', createUsuario); // Ruta para crear un nuevo usuario
 
 router.post('/login', loginUsuario);

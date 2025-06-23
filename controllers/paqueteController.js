@@ -70,6 +70,11 @@ const createPaquete = async (req, res) => {
   };
 
 const updatePaquete = async (req, res) => {
+  console.log('Actualizando paquete:', req);
+  console.log('Encabezados recibidos:', req.headers);
+  console.log('Body recibido:', req.body);
+  console.log('Archivos recibidos:', req.files);
+
   try {
     // Verificar que los servicios existan
     const serviciosExistentes = await Servicio.find({
@@ -97,6 +102,10 @@ const updatePaquete = async (req, res) => {
         });
         imageUrls.push(result.secure_url); // Añadir nuevas URLs al array
       }
+    } //imgeUrls ahora contiene las URLs de Cloudinary más las existentes
+    else {
+      // Si no se subieron nuevos archivos, mantener las URLs existentes
+      imageUrls = paqueteActual.multimedia;
     }
 
     // Eliminar archivos antiguos si no están en la nueva lista enviada por el cliente

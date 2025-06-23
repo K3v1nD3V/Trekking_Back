@@ -6,9 +6,22 @@ const {validationResult} = require('express-validator');
 const getVentas = async (req, res) => {
     try {
         const ventas = await Venta.find()
-            .populate('id_cliente')
+            .populate({
+                path: 'id_cliente',
+                populate: {
+                    path: 'id_usuario',
+                    select: 'nombre apellido correo'
+                }
+            })
+            .populate({
+                path: 'acompañantes',
+                populate: {
+                    path: 'id_usuario',
+                    select: 'nombre apellido correo'
+                }
+            })
             .populate('id_paquete')
-            .populate('acompañantes');
+            .populate('id_tour');
         res.json(ventas);
     } catch (error) {
         res.status(500).json({ message: error.message });

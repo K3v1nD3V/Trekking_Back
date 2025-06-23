@@ -79,26 +79,26 @@ const deleteUsuario = async (req, res) => {
     }
 };
 
-const loginUsuario = async (req, res) => {
-    const { correo, contraseña } = req.body;
+const loginUsuario = async (req, res) => {  //1
+    const { correo, contraseña } = req.body;  //2
     const usuario = await Usuario.findOne({ correo });
     console.log("Datos recibidos en login:", req.body);
   
-    if (!usuario) {
-      return res.status(400).json({ msg: 'Credenciales inválidas' });
+    if (!usuario) { //3
+      return res.status(400).json({ msg: 'Credenciales inválidas' }); //4
     }
   
     // ⚡️ Verificar si el correo ha sido confirmado
-    if (!usuario.verificado) {
-      return res.status(401).json({ msg: 'Cuenta no verificada. Revisa tu correo electrónico.' });
+    if (!usuario.verificado) {  //7
+      return res.status(401).json({ msg: 'Cuenta no verificada. Revisa tu correo electrónico.' }); //8
     }
   
-    const isMatch = await bcrypt.compare(contraseña, usuario.contraseña);
+    const isMatch = await bcrypt.compare(contraseña, usuario.contraseña); //5
     if (!isMatch) {
-      return res.status(400).json({ msg: 'Credenciales inválidas' });
+      return res.status(400).json({ msg: 'Credenciales inválidas' }); //6
     }
   
-    const rol = await Rol.findById(usuario.rol);
+    const rol = await Rol.findById(usuario.rol); //9
     if (!rol) {
       return res.status(500).json({ msg: 'Error al obtener el rol del usuario' });
     }
@@ -109,7 +109,7 @@ const loginUsuario = async (req, res) => {
       { expiresIn: '1h' }
     );
   
-    res.json({
+    res.json({ //10
       token,
       usuario: {
         nombre: usuario.nombre,
